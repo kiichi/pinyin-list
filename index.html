@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mandarin Together</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1>Mandarin Together</h1>
+      <div class="subtitle">Input English or Japanese. Get Chinese + pinyin + katakana + audio.</div>
+    </header>
+
+    <section class="lookup-row">
+      <div class="cell">
+        <div class="cell-label">Input Word</div>
+        <input id="sourceText" class="input-inline" type="text" placeholder="Type English or Japanese..." />
+      </div>
+      <div class="cell">
+        <div class="cell-label">Chinese</div>
+        <div id="zhText" class="cell-value zh">-</div>
+      </div>
+      <div class="cell">
+        <div class="cell-label">Pinyin</div>
+        <div class="pinyin-inline">
+          <span id="pinyinText" class="cell-value">-</span>
+          <button id="speakBtn" class="secondary play-inline" aria-label="Play pronunciation" title="Play pronunciation" disabled>▶</button>
+        </div>
+      </div>
+      <div class="cell">
+        <div class="cell-label">Katakana</div>
+        <div id="katakanaText" class="cell-value">-</div>
+      </div>
+      <div class="cell save-cell">
+        <div class="cell-label">Save</div>
+        <button id="saveBtn" class="secondary save-inline" aria-label="Save to list" title="Save to list" disabled>＋</button>
+      </div>
+    </section>
+
+    <div id="errorBox" class="error"></div>
+
+    <section class="saved">
+      <div class="tabs-bar">
+        <div id="tabsList" class="tabs-list"></div>
+        <div class="tabs-menu-wrap">
+          <button id="tabsMenuBtn" class="tabs-menu-btn" aria-label="More actions" title="More actions">⋯</button>
+          <div id="tabsMenuPanel" class="tabs-menu-panel" hidden>
+            <button id="exportBtn" class="tabs-menu-item" type="button">Export JSON</button>
+            <button id="importBtn" class="tabs-menu-item" type="button">Import JSON</button>
+            <div class="tabs-menu-sep"></div>
+            <button id="batchDeleteBtn" class="tabs-menu-item danger" type="button" disabled>Delete Selected Items</button>
+            <button id="clearBtn" class="tabs-menu-item danger" type="button">Clear All Items</button>
+            <div class="tabs-menu-sep"></div>
+            <div class="tabs-menu-label">Move To</div>
+            <div id="moveToList" class="tabs-move-list"></div>
+          </div>
+        </div>
+      </div>
+      <input id="importFileInput" type="file" accept="application/json,.json" hidden />
+      <ul id="savedList" class="saved-list"></ul>
+    </section>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/pinyin-pro@3.26.0/dist/index.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/wanakana@5.3.1/umd/wanakana.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
