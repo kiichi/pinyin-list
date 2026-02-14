@@ -4,6 +4,8 @@ A lightweight browser app for two-way Chinese and Japanese learning.
 
 Public site: https://kiichi.github.io/pinyin-list/
 
+Last update: improved bilingual list handling, mobile layout, and tab workflows.
+
 ## What It Does
 
 - Translate in both directions:
