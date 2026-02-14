@@ -448,18 +448,115 @@ button[disabled] {
     border-right: none;
     border-bottom: 1px solid var(--line);
     min-height: auto;
+    display: grid;
+    grid-template-columns: 84px minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
   }
 
   .cell:last-child {
     border-bottom: none;
   }
 
+  .cell-label {
+    margin: 0;
+    font-size: 0.78rem;
+  }
+
+  .cell-value,
+  .input-inline,
+  .pinyin-inline,
+  .save-inline {
+    grid-column: 2;
+    min-width: 0;
+  }
+
+  .cell-value {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .cell-value.zh {
+    font-size: 1.05rem;
+    line-height: 1.2;
+  }
+
+  .pinyin-inline {
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .pinyin-inline .cell-value {
+    margin-right: 0;
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+  }
+
+  .save-cell {
+    align-items: center;
+  }
+
+  .save-inline {
+    justify-self: start;
+  }
+
   .saved-item {
     grid-template-columns: 1fr;
-    align-items: stretch;
+    align-items: center;
+    gap: 4px;
   }
 
   .saved-cell {
-    white-space: normal;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .saved-cell::before {
+    color: var(--muted);
+    font-size: 0.78rem;
+    flex: 0 0 72px;
+  }
+
+  .saved-source::before {
+    content: 'Input';
+  }
+
+  .saved-chinese::before {
+    content: 'Chinese';
+  }
+
+  .saved-pinyin::before {
+    content: 'Pinyin';
+  }
+
+  .saved-katakana::before {
+    content: 'Katakana';
+  }
+
+  .saved-zh {
+    font-size: 1rem;
+  }
+
+  .saved-play {
+    width: 100%;
+    height: 28px;
+    min-width: 0;
+    justify-content: flex-start;
+  }
+
+  .saved-play::before {
+    content: 'Play';
+    color: var(--muted);
+    font-size: 0.78rem;
+    margin-right: 8px;
+    flex: 0 0 72px;
+    text-align: left;
   }
 }

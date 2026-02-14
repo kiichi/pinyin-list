@@ -1144,19 +1144,19 @@ function renderSavedItems() {
         });
 
         const inputCell = document.createElement('div');
-        inputCell.className = 'saved-cell';
+        inputCell.className = 'saved-cell saved-source';
         inputCell.textContent = item.source || '-';
 
         const zhCell = document.createElement('div');
-        zhCell.className = 'saved-cell saved-zh';
+        zhCell.className = 'saved-cell saved-zh saved-chinese';
         zhCell.textContent = item.zh || '-';
 
         const pinyinCell = document.createElement('div');
-        pinyinCell.className = 'saved-cell';
+        pinyinCell.className = 'saved-cell saved-pinyin';
         pinyinCell.textContent = item.pinyin || '-';
 
         const kataCell = document.createElement('div');
-        kataCell.className = 'saved-cell';
+        kataCell.className = 'saved-cell saved-katakana';
         kataCell.textContent = item.katakana || '-';
 
         const playBtn = document.createElement('button');
