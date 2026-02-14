@@ -1828,7 +1828,7 @@ function renderSavedItems() {
 
   for (const item of items) {
     const li = document.createElement('li');
-    li.className = `saved-item${selectedSavedIds.has(item.id) ? ' is-selected' : ''}`;
+    li.className = `saved-item mode-${item.mode || 'zh'}${selectedSavedIds.has(item.id) ? ' is-selected' : ''}`;
     li.draggable = true;
     li.dataset.id = item.id;
     li.addEventListener('click', (event) => {

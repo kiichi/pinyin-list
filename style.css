@@ -441,9 +441,22 @@ button[disabled] {
 
 .saved-zh {
   font-size: 1rem;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+}
+
+.saved-item.mode-ja .saved-zh {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  word-break: break-word;
+  line-height: 1.25;
+}
+
+.saved-item.mode-zh .saved-zh {
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  word-break: break-word;
+  line-height: 1.25;
 }
 
 .saved-play {
@@ -597,9 +610,22 @@ button[disabled] {
 
   .saved-zh {
     font-size: 0.96rem;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  }
+
+  .saved-item.mode-ja .saved-zh {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    word-break: break-word;
+    line-height: 1.25;
+  }
+
+  .saved-item.mode-zh .saved-zh {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    word-break: break-word;
+    line-height: 1.25;
   }
 
   .saved-actions {
