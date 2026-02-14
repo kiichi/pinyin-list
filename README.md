@@ -6,6 +6,12 @@ Public site: https://kiichi.github.io/pinyin-list/
 
 Last update: improved bilingual list handling, mobile layout, and tab workflows.
 
+## Recent Changes
+
+- Added copy icon button on saved rows
+- Improved saved-list behavior across Chinese/Japanese modes
+- Refined wrapping behavior for long saved entries
+
 ## What It Does
 
 - Translate in both directions:
