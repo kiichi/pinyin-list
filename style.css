@@ -440,7 +440,10 @@ button[disabled] {
 }
 
 .saved-zh {
-  font-size: 1.1rem;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .saved-play {
@@ -593,7 +596,10 @@ button[disabled] {
   }
 
   .saved-zh {
-    font-size: 1rem;
+    font-size: 0.96rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .saved-actions {
