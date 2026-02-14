@@ -3,35 +3,44 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mandarin Together</title>
+  <title>Chinese ↔ Japanese Together</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <main class="app">
     <header>
-      <h1>Mandarin Together</h1>
-      <div class="subtitle">Input English or Japanese. Get Chinese + pinyin + katakana + audio.</div>
+      <h1>Chinese ↔ Japanese Together</h1>
+      <div id="subtitleText" class="subtitle">Input English or Japanese. Get Chinese + pinyin + katakana + audio.</div>
+      <div class="mode-row">
+        <label class="mode-label" for="modeSelect">Mode</label>
+        <select id="modeSelect" class="mode-select">
+          <option value="zh">Japanese / English -> Chinese</option>
+          <option value="ja">Chinese / English -> Japanese</option>
+        </select>
+      </div>
     </header>
 
     <section class="lookup-row">
       <div class="cell">
-        <div class="cell-label">Input Word</div>
+        <div id="inputLabel" class="cell-label">Input Word</div>
         <input id="sourceText" class="input-inline" type="text" placeholder="Type English or Japanese..." />
       </div>
       <div class="cell">
-        <div class="cell-label">Chinese</div>
+        <div id="targetLabel" class="cell-label">Chinese</div>
         <div id="zhText" class="cell-value zh">-</div>
       </div>
       <div class="cell">
-        <div class="cell-label">Pinyin</div>
-        <div class="pinyin-inline">
+        <div id="readingLabel" class="cell-label">Pinyin</div>
+        <div id="readingInline" class="pinyin-inline">
           <span id="pinyinText" class="cell-value">-</span>
           <button id="speakBtn" class="secondary play-inline" aria-label="Play pronunciation" title="Play pronunciation" disabled>▶</button>
         </div>
       </div>
       <div class="cell">
-        <div class="cell-label">Katakana</div>
-        <div id="katakanaText" class="cell-value">-</div>
+        <div id="kanaLabel" class="cell-label">Katakana</div>
+        <div id="kanaInline" class="pinyin-inline">
+          <span id="katakanaText" class="cell-value">-</span>
+        </div>
       </div>
       <div class="cell save-cell">
         <div class="cell-label">Save</div>
@@ -52,6 +61,7 @@
             <div class="tabs-menu-sep"></div>
             <button id="batchDeleteBtn" class="tabs-menu-item danger" type="button" disabled>Delete Selected Items</button>
             <button id="clearBtn" class="tabs-menu-item danger" type="button">Clear All Items</button>
+            <button id="deleteTabBtn" class="tabs-menu-item danger" type="button">Delete This Tab</button>
             <div class="tabs-menu-sep"></div>
             <div class="tabs-menu-label">Move To</div>
             <div id="moveToList" class="tabs-move-list"></div>
@@ -64,7 +74,6 @@
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/pinyin-pro@3.26.0/dist/index.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/wanakana@5.3.1/umd/wanakana.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
