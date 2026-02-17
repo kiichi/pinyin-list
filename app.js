@@ -282,7 +282,14 @@ importBtn.addEventListener('click', () => {
       try {
         const targetLang = appMode === 'ja' ? 'ja' : 'zh-CN';
         const translatedPack = await translateText(input, targetLang);
-        const targetText = translatedPack.translated;
+        let targetText = translatedPack.translated;
+        if (
+          appMode === 'zh' &&
+          /[\u4E00-\u9FFF]/.test(input) &&
+          /^[A-Za-z]$/.test(String(targetText || '').trim())
+        ) {
+          targetText = input;
+        }
         if (requestId !== requestCounter) return;
         let reading = '';
         let kata = '';
