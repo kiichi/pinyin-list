@@ -503,6 +503,10 @@ button[disabled] {
   line-height: 1;
 }
 
+.saved-delete {
+  font-size: 0.85rem;
+}
+
 .saved-copy {
   opacity: 1;
   pointer-events: auto;

@@ -28,6 +28,7 @@ const deleteTabBtn = document.getElementById('deleteTabBtn');
 
     const STORAGE_KEY = 'chinese_word_helper_saved_v2';
     const MODE_KEY = 'chinese_word_helper_mode_v1';
+    const MODE_KEYS = ['zh', 'ja', 'ko', 'ja_ko'];
     let currentResult = null;
 let appMode = loadAppMode();
 let appState = loadAppState();
@@ -86,7 +87,7 @@ savedList.addEventListener('drop', (event) => {
 
     sourceText.addEventListener('input', scheduleTranslate);
 modeSelect.addEventListener('change', () => {
-  appMode = modeSelect.value === 'ja' ? 'ja' : 'zh';
+  appMode = MODE_KEYS.includes(modeSelect.value) ? modeSelect.value : 'zh';
   persistAppMode(appMode);
   selectedSavedIds.clear();
   lastSelectedSavedId = null;
@@ -280,7 +281,9 @@ importBtn.addEventListener('click', () => {
       showBusy(true);
 
       try {
-        const targetLang = appMode === 'ja' ? 'ja' : 'zh-CN';
+        const targetLang = appMode === 'zh'
+          ? 'zh-CN'
+          : (appMode === 'ko' ? 'ko' : 'ja');
         const translatedPack = await translateText(input, targetLang);
         let targetText = translatedPack.translated;
         if (
@@ -294,7 +297,7 @@ importBtn.addEventListener('click', () => {
         let reading = '';
         let kata = '';
         let speakLang = 'zh-CN';
-        if (appMode === 'ja') {
+        if (appMode === 'ja' || appMode === 'ja_ko') {
           speakLang = 'ja-JP';
           await ensureWanakanaLoaded();
           let kanaDisplay = await fetchJapaneseHiragana(targetText);
@@ -331,6 +334,10 @@ importBtn.addEventListener('click', () => {
           }
           reading = hasKana(kanaDisplay) ? kanaDisplay : '';
           kata = romaji;
+        } else if (appMode === 'ko') {
+          speakLang = 'ko-KR';
+          reading = await fetchRomanizedKorean(targetText);
+          kata = '';
         } else {
           if (window.pinyinPro && typeof window.pinyinPro.pinyin === 'function') {
             reading = window.pinyinPro.pinyin(targetText, {
@@ -403,8 +410,8 @@ importBtn.addEventListener('click', () => {
       } catch {
         const fallback = 'https://api.mymemory.translated.net/get';
         const sourceCandidates = targetLang === 'ja'
-          ? ['zh-CN', 'en']
-          : ['ja', 'en', 'zh-CN'];
+          ? ['zh-CN', 'ko', 'en']
+          : (targetLang === 'ko' ? ['ja', 'en', 'zh-CN'] : ['ja', 'en', 'zh-CN']);
 
         for (const sourceLang of sourceCandidates) {
           const fbParams = new URLSearchParams({
@@ -496,6 +503,24 @@ importBtn.addEventListener('click', () => {
       if (!res.ok) return '';
       const data = await res.json();
       return extractRomanizedReading(data);
+    }
+
+    async function fetchRomanizedKorean(koreanText) {
+      if (!koreanText) return '';
+      const endpoint = 'https://translate.googleapis.com/translate_a/single';
+      const params = new URLSearchParams({
+        client: 'gtx',
+        sl: 'ko',
+        tl: 'en',
+        dt: 'rm',
+        q: koreanText
+      });
+      const res = await fetchWithTimeout(endpoint + '?' + params.toString(), 2500);
+      if (!res.ok) return '';
+      const data = await res.json();
+      const rm = extractRomanizedReading(data);
+      if (isRomajiLike(rm)) return normalizeRomaji(rm);
+      return '';
     }
 
     async function fetchJapaneseHiragana(japaneseText) {
@@ -1055,7 +1080,8 @@ importBtn.addEventListener('click', () => {
       const voices = window.speechSynthesis.getVoices();
       const preferZh = ['xiaoxiao', 'tingting', 'yunxi', 'google', 'microsoft'];
       const preferJa = ['nanami', 'keita', 'google', 'microsoft', 'kyoko', 'otoya'];
-      const voicePrefix = (lang || '').toLowerCase().startsWith('ja') ? 'ja' : 'zh';
+      const langLower = (lang || '').toLowerCase();
+      const voicePrefix = langLower.startsWith('ja') ? 'ja' : (langLower.startsWith('ko') ? 'ko' : 'zh');
       const preferred = voicePrefix === 'ja' ? preferJa : preferZh;
       const candidates = voices.filter(v => v.lang.toLowerCase().startsWith(voicePrefix));
       const picked = candidates.find(v =>
@@ -1080,6 +1106,26 @@ importBtn.addEventListener('click', () => {
         if (speakBtn.parentElement !== kanaInline) {
           kanaInline.appendChild(speakBtn);
         }
+      } else if (appMode === 'ko') {
+        if (subtitleText) subtitleText.textContent = 'Input Japanese or English. Get Korean + romanization + audio.';
+        inputLabel.textContent = 'Input Word';
+        targetLabel.textContent = 'Korean';
+        readingLabel.textContent = 'Romanization';
+        kanaLabel.textContent = '-';
+        sourceText.placeholder = 'Type Japanese or English...';
+        if (speakBtn.parentElement !== readingInline) {
+          readingInline.appendChild(speakBtn);
+        }
+      } else if (appMode === 'ja_ko') {
+        if (subtitleText) subtitleText.textContent = 'Input Korean or English. Get Japanese + Hiragana + Romaji + audio.';
+        inputLabel.textContent = 'Input Word';
+        targetLabel.textContent = 'Japanese';
+        readingLabel.textContent = 'Hiragana';
+        kanaLabel.textContent = 'Romaji';
+        sourceText.placeholder = 'Type Korean or English...';
+        if (speakBtn.parentElement !== kanaInline) {
+          kanaInline.appendChild(speakBtn);
+        }
       } else {
         if (subtitleText) subtitleText.textContent = 'Input Japanese or English. Get Chinese + pinyin + katakana + audio.';
         inputLabel.textContent = 'Input Word';
@@ -1095,11 +1141,11 @@ importBtn.addEventListener('click', () => {
 
     function loadAppMode() {
       const raw = localStorage.getItem(MODE_KEY);
-      return raw === 'ja' ? 'ja' : 'zh';
+      return MODE_KEYS.includes(raw) ? raw : 'zh';
     }
 
     function persistAppMode(mode) {
-      localStorage.setItem(MODE_KEY, mode === 'ja' ? 'ja' : 'zh');
+      localStorage.setItem(MODE_KEY, MODE_KEYS.includes(mode) ? mode : 'zh');
     }
 
     function showBusy(isBusy) {
@@ -1506,7 +1552,7 @@ function renderMoveToMenuItems() {
     }
 
     function getModeState(mode = appMode) {
-      const key = mode === 'ja' ? 'ja' : 'zh';
+      const key = MODE_KEYS.includes(mode) ? mode : 'zh';
       if (!appState || typeof appState !== 'object') {
         appState = { modes: {} };
       }
@@ -1525,7 +1571,9 @@ function renderMoveToMenuItems() {
         name,
         itemsByMode: {
           zh: [],
-          ja: []
+          ja: [],
+          ko: [],
+          ja_ko: []
         }
       };
     }
@@ -1533,22 +1581,26 @@ function renderMoveToMenuItems() {
     function getTabItems(tab, mode = appMode) {
       if (!tab) return [];
       if (!tab.itemsByMode || typeof tab.itemsByMode !== 'object') {
-        tab.itemsByMode = { zh: [], ja: [] };
+        tab.itemsByMode = { zh: [], ja: [], ko: [], ja_ko: [] };
       }
       if (!Array.isArray(tab.itemsByMode.zh)) tab.itemsByMode.zh = [];
       if (!Array.isArray(tab.itemsByMode.ja)) tab.itemsByMode.ja = [];
-      const key = mode === 'ja' ? 'ja' : 'zh';
+      if (!Array.isArray(tab.itemsByMode.ko)) tab.itemsByMode.ko = [];
+      if (!Array.isArray(tab.itemsByMode.ja_ko)) tab.itemsByMode.ja_ko = [];
+      const key = MODE_KEYS.includes(mode) ? mode : 'zh';
       return tab.itemsByMode[key];
     }
 
     function setTabItems(tab, items, mode = appMode) {
       if (!tab) return;
       if (!tab.itemsByMode || typeof tab.itemsByMode !== 'object') {
-        tab.itemsByMode = { zh: [], ja: [] };
+        tab.itemsByMode = { zh: [], ja: [], ko: [], ja_ko: [] };
       }
       if (!Array.isArray(tab.itemsByMode.zh)) tab.itemsByMode.zh = [];
       if (!Array.isArray(tab.itemsByMode.ja)) tab.itemsByMode.ja = [];
-      const key = mode === 'ja' ? 'ja' : 'zh';
+      if (!Array.isArray(tab.itemsByMode.ko)) tab.itemsByMode.ko = [];
+      if (!Array.isArray(tab.itemsByMode.ja_ko)) tab.itemsByMode.ja_ko = [];
+      const key = MODE_KEYS.includes(mode) ? mode : 'zh';
       tab.itemsByMode[key] = items;
     }
 
@@ -1556,18 +1608,22 @@ function renderMoveToMenuItems() {
       const next = {
         id: tab && tab.id ? String(tab.id) : generateItemId(),
         name: tab && tab.name && String(tab.name).trim() ? String(tab.name).trim() : 'List',
-        itemsByMode: { zh: [], ja: [] }
+        itemsByMode: { zh: [], ja: [], ko: [], ja_ko: [] }
       };
 
       if (tab && tab.itemsByMode && typeof tab.itemsByMode === 'object') {
         next.itemsByMode.zh = normalizeSavedItems(Array.isArray(tab.itemsByMode.zh) ? tab.itemsByMode.zh : []);
         next.itemsByMode.ja = normalizeSavedItems(Array.isArray(tab.itemsByMode.ja) ? tab.itemsByMode.ja : []);
+        next.itemsByMode.ko = normalizeSavedItems(Array.isArray(tab.itemsByMode.ko) ? tab.itemsByMode.ko : []);
+        next.itemsByMode.ja_ko = normalizeSavedItems(Array.isArray(tab.itemsByMode.ja_ko) ? tab.itemsByMode.ja_ko : []);
         return next;
       }
 
       const legacyItems = normalizeSavedItems(tab && Array.isArray(tab.items) ? tab.items : []);
       next.itemsByMode.zh = legacyItems.filter(item => (item.mode || 'zh') !== 'ja');
       next.itemsByMode.ja = legacyItems.filter(item => (item.mode || 'zh') === 'ja');
+      next.itemsByMode.ko = legacyItems.filter(item => (item.mode || 'zh') === 'ko');
+      next.itemsByMode.ja_ko = legacyItems.filter(item => (item.mode || 'zh') === 'ja_ko');
       return next;
     }
 
@@ -1579,7 +1635,9 @@ function renderMoveToMenuItems() {
         return {
           modes: {
             zh: createWorkspaceFromTabs(root.modes.zh && root.modes.zh.tabs, root.modes.zh && root.modes.zh.activeTabId),
-            ja: createWorkspaceFromTabs(root.modes.ja && root.modes.ja.tabs, root.modes.ja && root.modes.ja.activeTabId)
+            ja: createWorkspaceFromTabs(root.modes.ja && root.modes.ja.tabs, root.modes.ja && root.modes.ja.activeTabId),
+            ko: createWorkspaceFromTabs(root.modes.ko && root.modes.ko.tabs, root.modes.ko && root.modes.ko.activeTabId),
+            ja_ko: createWorkspaceFromTabs(root.modes.ja_ko && root.modes.ja_ko.tabs, root.modes.ja_ko && root.modes.ja_ko.activeTabId)
           }
         };
       }
@@ -1632,7 +1690,9 @@ function renderMoveToMenuItems() {
               return {
                 modes: {
                   zh: createWorkspaceFromTabs(parsed.modes.zh && parsed.modes.zh.tabs, parsed.modes.zh && parsed.modes.zh.activeTabId),
-                  ja: createWorkspaceFromTabs(parsed.modes.ja && parsed.modes.ja.tabs, parsed.modes.ja && parsed.modes.ja.activeTabId)
+                  ja: createWorkspaceFromTabs(parsed.modes.ja && parsed.modes.ja.tabs, parsed.modes.ja && parsed.modes.ja.activeTabId),
+                  ko: createWorkspaceFromTabs(parsed.modes.ko && parsed.modes.ko.tabs, parsed.modes.ko && parsed.modes.ko.activeTabId),
+                  ja_ko: createWorkspaceFromTabs(parsed.modes.ja_ko && parsed.modes.ja_ko.tabs, parsed.modes.ja_ko && parsed.modes.ja_ko.activeTabId)
                 }
               };
             }
@@ -1647,8 +1707,10 @@ function renderMoveToMenuItems() {
 
       const first = createTab('List 1');
       const legacyItems = normalizeSavedItems(loadLegacySavedItems());
-      first.itemsByMode.zh = legacyItems.filter(item => (item.mode || 'zh') !== 'ja');
+      first.itemsByMode.zh = legacyItems.filter(item => (item.mode || 'zh') === 'zh');
       first.itemsByMode.ja = legacyItems.filter(item => (item.mode || 'zh') === 'ja');
+      first.itemsByMode.ko = legacyItems.filter(item => (item.mode || 'zh') === 'ko');
+      first.itemsByMode.ja_ko = legacyItems.filter(item => (item.mode || 'zh') === 'ja_ko');
       return migrateSharedTabsToModeState([first], first.id);
     }
 
@@ -1662,7 +1724,9 @@ function renderMoveToMenuItems() {
             name: normalized.name,
             itemsByMode: {
               zh: mode === 'zh' ? [...normalized.itemsByMode.zh] : [],
-              ja: mode === 'ja' ? [...normalized.itemsByMode.ja] : []
+              ja: mode === 'ja' ? [...normalized.itemsByMode.ja] : [],
+              ko: mode === 'ko' ? [...normalized.itemsByMode.ko] : [],
+              ja_ko: mode === 'ja_ko' ? [...normalized.itemsByMode.ja_ko] : []
             }
           };
         });
@@ -1672,7 +1736,9 @@ function renderMoveToMenuItems() {
       return {
         modes: {
           zh: projectMode('zh'),
-          ja: projectMode('ja')
+          ja: projectMode('ja'),
+          ko: projectMode('ko'),
+          ja_ko: projectMode('ja_ko')
         }
       };
     }
@@ -1684,7 +1750,7 @@ function renderMoveToMenuItems() {
         mode: item.mode || 'zh',
         target: item.target || item.zh || '',
         reading: item.reading || item.pinyin || '',
-        speakLang: item.speakLang || ((item.mode || 'zh') === 'ja' ? 'ja-JP' : 'zh-CN')
+        speakLang: item.speakLang || ((item.mode || 'zh') === 'ja' || (item.mode || 'zh') === 'ja_ko' ? 'ja-JP' : ((item.mode || 'zh') === 'ko' ? 'ko-KR' : 'zh-CN'))
       }));
     }
 
@@ -1936,10 +2002,30 @@ function renderSavedItems() {
           showError(ok ? 'Copied.' : 'Copy failed.');
         });
 
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'danger saved-action-btn saved-delete';
+        deleteBtn.textContent = '✕';
+        deleteBtn.setAttribute('aria-label', 'Delete item');
+        deleteBtn.title = 'Delete item';
+        deleteBtn.addEventListener('click', () => {
+          const activeTab = getActiveTab();
+          if (!activeTab) return;
+          const activeItems = getTabItems(activeTab);
+          setTabItems(activeTab, activeItems.filter(row => row.id !== item.id));
+          selectedSavedIds.delete(item.id);
+          if (lastSelectedSavedId === item.id) {
+            lastSelectedSavedId = null;
+          }
+          persistAppState();
+          renderTabs();
+          renderSavedItems();
+        });
+
         const actionsCell = document.createElement('div');
         actionsCell.className = 'saved-actions';
         actionsCell.appendChild(playBtn);
         actionsCell.appendChild(copyBtn);
+        actionsCell.appendChild(deleteBtn);
 
         li.appendChild(inputCell);
         li.appendChild(zhCell);
