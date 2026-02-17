@@ -42,6 +42,15 @@ let lastSelectedSavedId = null;
 let debounceId = null;
 let requestCounter = 0;
 
+function shouldAutoFocusInput() {
+  return !window.matchMedia('(max-width: 940px)').matches;
+}
+
+function focusInputIfDesktop() {
+  if (!shouldAutoFocusInput()) return;
+  sourceText.focus();
+}
+
 ensureWanakanaLoaded();
 applyModeToUi();
 renderTabs();
@@ -93,7 +102,7 @@ modeSelect.addEventListener('change', () => {
   speakBtn.disabled = true;
   saveBtn.disabled = true;
   showError('');
-  sourceText.focus();
+  focusInputIfDesktop();
 });
     sourceText.addEventListener('keydown', (event) => {
       if (event.key !== 'Enter') return;
@@ -143,7 +152,7 @@ tabsMenuBtn.addEventListener('click', (event) => {
       const exists = activeItems.some(item => makeSavedItemKey(item) === nextKey);
       if (exists) {
         showError('Already in this tab.');
-        sourceText.focus();
+        focusInputIfDesktop();
         return;
       }
       activeItems.unshift({
@@ -166,7 +175,7 @@ tabsMenuBtn.addEventListener('click', (event) => {
       speakBtn.disabled = true;
       saveBtn.disabled = true;
       showError('');
-      sourceText.focus();
+      focusInputIfDesktop();
     });
 
 batchDeleteBtn.addEventListener('click', () => {
@@ -1055,7 +1064,7 @@ importBtn.addEventListener('click', () => {
       modeSelect.value = appMode;
       kanaLabel.textContent = 'Katakana';
       if (appMode === 'ja') {
-        subtitleText.textContent = 'Input Chinese or English. Get Japanese + Hiragana + Romaji + audio.';
+        if (subtitleText) subtitleText.textContent = 'Input Chinese or English. Get Japanese + Hiragana + Romaji + audio.';
         inputLabel.textContent = 'Input Word';
         targetLabel.textContent = 'Japanese';
         readingLabel.textContent = 'Hiragana';
@@ -1065,7 +1074,7 @@ importBtn.addEventListener('click', () => {
           kanaInline.appendChild(speakBtn);
         }
       } else {
-        subtitleText.textContent = 'Input Japanese or English. Get Chinese + pinyin + katakana + audio.';
+        if (subtitleText) subtitleText.textContent = 'Input Japanese or English. Get Chinese + pinyin + katakana + audio.';
         inputLabel.textContent = 'Input Word';
         targetLabel.textContent = 'Chinese';
         readingLabel.textContent = 'Pinyin';

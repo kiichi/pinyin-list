@@ -22,21 +22,24 @@ body {
     radial-gradient(circle at 80% 0%, #f0e0cf 0%, transparent 35%),
     var(--bg);
   min-height: 100vh;
-  padding: 24px;
+  padding: 12px;
+  overflow-x: hidden;
 }
 
 .app {
-  max-width: 900px;
+  width: 100%;
+  max-width: 820px;
   margin: 0 auto;
   background: var(--panel);
   border: 1px solid var(--line);
   border-radius: 6px;
   box-shadow: 0 4px 14px rgba(31, 26, 20, 0.06);
-  overflow: visible;
+  overflow-x: hidden;
+  overflow-y: visible;
 }
 
 header {
-  padding: 20px;
+  padding: 12px 14px;
   border-bottom: 1px solid var(--line);
   background: linear-gradient(90deg, #fff8ef, #f8efdf);
 }
@@ -49,13 +52,11 @@ h1 {
 }
 
 .subtitle {
-  margin-top: 6px;
-  color: var(--muted);
-  font-size: 0.92rem;
+  display: none;
 }
 
 .mode-row {
-  margin-top: 10px;
+  margin-top: 6px;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -77,9 +78,10 @@ h1 {
 
 .lookup-row {
   display: grid;
-  grid-template-columns: 2fr 1fr 1.2fr 1.2fr auto;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1.2fr) auto;
   border-bottom: 1px solid var(--line);
   background: #fff;
+  min-width: 0;
 }
 
 .cell {
@@ -168,21 +170,31 @@ button[disabled] {
 }
 
 .save-cell {
-  align-items: center;
+  padding: 0;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+.save-cell .cell-label {
+  display: none;
 }
 
 .save-inline {
-  width: 34px;
-  height: 34px;
-  min-width: 34px;
-  padding: 0;
-  font-size: 1.15rem;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  min-height: 96px;
+  padding: 0 14px;
+  font-size: 1rem;
+  font-weight: 700;
   line-height: 1;
+  border-radius: 0;
 }
 
 .saved {
   padding: 20px;
   overflow: visible;
+  min-width: 0;
 }
 
 .tabs-bar {
@@ -192,6 +204,7 @@ button[disabled] {
   gap: 10px;
   margin-bottom: 10px;
   flex-wrap: wrap;
+  min-width: 0;
 }
 
 .tabs-list {
@@ -202,6 +215,7 @@ button[disabled] {
   align-items: flex-end;
   border-bottom: 1px solid var(--line);
   padding-bottom: 2px;
+  min-width: 0;
 }
 
 .tabs-menu-wrap {
@@ -331,6 +345,10 @@ button[disabled] {
   border-radius: 0;
   border-bottom: 2px solid transparent;
   padding: 8px 8px 7px;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tab-item.active .tab-btn {
@@ -368,6 +386,7 @@ button[disabled] {
   display: grid;
   gap: 6px;
   min-height: 48px;
+  min-width: 0;
 }
 
 .saved-list.drag-over-end {
@@ -381,7 +400,7 @@ button[disabled] {
   border-radius: 4px;
   padding: 8px 10px;
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1.2fr 1.2fr auto;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1.2fr) auto;
   gap: 8px;
   align-items: center;
   background: #fff;
@@ -508,6 +527,15 @@ button[disabled] {
 }
 
 @media (max-width: 940px) {
+  body {
+    padding: 8px;
+  }
+
+  .app {
+    width: 100%;
+    max-width: 100%;
+  }
+
   .lookup-row {
     grid-template-columns: 1fr;
   }
@@ -564,11 +592,20 @@ button[disabled] {
   }
 
   .save-cell {
+    padding: 8px 12px;
+    grid-template-columns: 1fr;
     align-items: center;
+    justify-content: center;
   }
 
   .save-inline {
-    justify-self: start;
+    grid-column: 1 / -1;
+    justify-self: stretch;
+    width: 100%;
+    height: 42px;
+    min-height: 42px;
+    border-radius: 4px;
+    font-size: 0.95rem;
   }
 
   .saved-item {

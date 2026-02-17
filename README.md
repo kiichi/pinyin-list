@@ -24,6 +24,14 @@ Last update: improved bilingual list handling, mobile layout, and tab workflows.
 - Drag/drop reorder and move between tabs
 - Import/Export data (JSON)
 
+## Quick Use
+
+1. Choose mode at the top.
+2. Type a word/sentence in the input.
+3. Wait for auto-translation.
+4. Press `Enter` or click save to add to the current tab list.
+5. Use the `⋯` menu for import/export, move selected, clear, and tab actions.
+
 ## Tech
 
 - Standalone frontend only
