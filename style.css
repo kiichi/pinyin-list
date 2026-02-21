@@ -414,6 +414,12 @@ button[disabled] {
   background: #f3fbf6;
 }
 
+.saved-item.is-playing {
+  border-color: #9b5a2f;
+  box-shadow: inset 0 0 0 1px #f0d1b4;
+  background: #fff6eb;
+}
+
 .saved-item.is-dragging {
   opacity: 0.55;
 }

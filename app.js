@@ -14,6 +14,7 @@ const moveToList = document.getElementById('moveToList');
 const saveBtn = document.getElementById('saveBtn');
 const exportBtn = document.getElementById('exportBtn');
 const importBtn = document.getElementById('importBtn');
+const playAllBtn = document.getElementById('playAllBtn');
 const batchDeleteBtn = document.getElementById('batchDeleteBtn');
 const clearBtn = document.getElementById('clearBtn');
 const deleteTabBtn = document.getElementById('deleteTabBtn');
@@ -42,6 +43,9 @@ let editingTabId = null;
 let lastSelectedSavedId = null;
 let debounceId = null;
 let requestCounter = 0;
+let playAllRunId = 0;
+let nowPlayingSavedId = null;
+let isPlayAllActive = false;
 
 function shouldAutoFocusInput() {
   return !window.matchMedia('(max-width: 940px)').matches;
@@ -228,6 +232,20 @@ importBtn.addEventListener('click', () => {
   tabsMenuBtn.setAttribute('aria-expanded', 'false');
   importFileInput.click();
 });
+
+if (playAllBtn) {
+  playAllBtn.addEventListener('click', () => {
+    tabsMenuPanel.hidden = true;
+    tabsMenuBtn.setAttribute('aria-expanded', 'false');
+    if (isPlayAllActive) {
+      stopPlayAll();
+      window.speechSynthesis.cancel();
+      setNowPlayingSavedId(null);
+      return;
+    }
+    playAllSavedItems();
+  });
+}
 
     importFileInput.addEventListener('change', async () => {
       const file = importFileInput.files && importFileInput.files[0];
@@ -1070,8 +1088,7 @@ importBtn.addEventListener('click', () => {
       return out;
     }
 
-    function speakText(text, lang) {
-      if (!text) return;
+    function buildUtterance(text, lang) {
       const utterance = new SpeechSynthesisUtterance(text);
       utterance.lang = lang || 'zh-CN';
       utterance.rate = 0.8;
@@ -1088,7 +1105,92 @@ importBtn.addEventListener('click', () => {
         preferred.some(p => v.name.toLowerCase().includes(p))
       ) || candidates[0];
       if (picked) utterance.voice = picked;
+      return utterance;
+    }
 
+    function stopPlayAll() {
+      playAllRunId += 1;
+      if (isPlayAllActive) {
+        isPlayAllActive = false;
+        updateTabsMenuState();
+      }
+    }
+
+    function setNowPlayingSavedId(itemId) {
+      const nextId = itemId || null;
+      if (nowPlayingSavedId === nextId) return;
+      nowPlayingSavedId = nextId;
+      renderSavedItems();
+    }
+
+    function speakText(text, lang) {
+      if (!text) return;
+      stopPlayAll();
+      setNowPlayingSavedId(null);
+      const utterance = buildUtterance(text, lang);
+      window.speechSynthesis.cancel();
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function playAllSavedItems() {
+      const activeTab = getActiveTab();
+      if (!activeTab) return;
+      const items = getTabItems(activeTab);
+      const queue = items
+        .map((item) => ({
+          id: item.id,
+          text: (item.target || item.zh || '').trim(),
+          lang: item.speakLang || (item.mode === 'ja' || item.mode === 'ja_ko' ? 'ja-JP' : (item.mode === 'ko' ? 'ko-KR' : 'zh-CN'))
+        }))
+        .filter(entry => Boolean(entry.text));
+      if (queue.length === 0) return;
+
+      const runId = playAllRunId + 1;
+      playAllRunId = runId;
+      if (!isPlayAllActive) {
+        isPlayAllActive = true;
+        updateTabsMenuState();
+      }
+      window.speechSynthesis.cancel();
+      speakQueue(queue, 0, runId);
+    }
+
+    function speakQueue(queue, index, runId) {
+      if (runId !== playAllRunId) {
+        setNowPlayingSavedId(null);
+        return;
+      }
+      if (index >= queue.length) {
+        setNowPlayingSavedId(null);
+        stopPlayAll();
+        return;
+      }
+
+      const entry = queue[index];
+      setNowPlayingSavedId(entry.id);
+      const utterance = buildUtterance(entry.text, entry.lang);
+      utterance.onend = () => {
+        setTimeout(() => {
+          speakQueue(queue, index + 1, runId);
+        }, 1000);
+      };
+      utterance.onerror = () => {
+        setTimeout(() => {
+          speakQueue(queue, index + 1, runId);
+        }, 1000);
+      };
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function playSavedItem(item) {
+      const text = (item.target || item.zh || '').trim();
+      if (!text) return;
+      stopPlayAll();
+      setNowPlayingSavedId(item.id);
+      const lang = item.speakLang || (item.mode === 'ja' || item.mode === 'ja_ko' ? 'ja-JP' : (item.mode === 'ko' ? 'ko-KR' : 'zh-CN'));
+      const utterance = buildUtterance(text, lang);
+      utterance.onend = () => setNowPlayingSavedId(null);
+      utterance.onerror = () => setNowPlayingSavedId(null);
       window.speechSynthesis.cancel();
       window.speechSynthesis.speak(utterance);
     }
@@ -1367,11 +1469,21 @@ importBtn.addEventListener('click', () => {
     }
 
     function updateTabsMenuState() {
-      if (!deleteTabBtn) return;
       const modeState = getModeState();
-      const canDeleteTab = Boolean(modeState && Array.isArray(modeState.tabs) && modeState.tabs.length > 1);
-      deleteTabBtn.disabled = !canDeleteTab;
-      deleteTabBtn.title = canDeleteTab ? '' : 'At least one tab is required';
+      if (deleteTabBtn) {
+        const canDeleteTab = Boolean(modeState && Array.isArray(modeState.tabs) && modeState.tabs.length > 1);
+        deleteTabBtn.disabled = !canDeleteTab;
+        deleteTabBtn.title = canDeleteTab ? '' : 'At least one tab is required';
+      }
+      if (playAllBtn) {
+        const activeTab = getActiveTab();
+        const hasPlayableItems = Boolean(activeTab && getTabItems(activeTab).some(item => (item.target || item.zh || '').trim()));
+        playAllBtn.textContent = isPlayAllActive ? 'Stop Playing' : 'Play All';
+        playAllBtn.disabled = !hasPlayableItems && !isPlayAllActive;
+        playAllBtn.title = isPlayAllActive
+          ? 'Stop playing pronunciations'
+          : (hasPlayableItems ? 'Play all saved pronunciations' : 'No items to play');
+      }
     }
 
     function clearTabDropHighlights() {
@@ -1910,7 +2022,7 @@ function renderSavedItems() {
 
   for (const item of items) {
     const li = document.createElement('li');
-    li.className = `saved-item mode-${item.mode || 'zh'}${selectedSavedIds.has(item.id) ? ' is-selected' : ''}`;
+    li.className = `saved-item mode-${item.mode || 'zh'}${selectedSavedIds.has(item.id) ? ' is-selected' : ''}${nowPlayingSavedId === item.id ? ' is-playing' : ''}`;
     li.draggable = true;
     li.dataset.id = item.id;
     li.addEventListener('click', (event) => {
@@ -1989,7 +2101,7 @@ function renderSavedItems() {
         playBtn.textContent = '▶';
         playBtn.setAttribute('aria-label', 'Play pronunciation');
         playBtn.title = 'Play pronunciation';
-        playBtn.addEventListener('click', () => speakText(item.target || item.zh || '', item.speakLang || (item.mode === 'ja' ? 'ja-JP' : 'zh-CN')));
+        playBtn.addEventListener('click', () => playSavedItem(item));
 
         const copyBtn = document.createElement('button');
         copyBtn.className = 'secondary saved-action-btn saved-copy';
