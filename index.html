@@ -62,25 +62,65 @@
     <div id="errorBox" class="error"></div>
 
     <section class="saved">
+      <div id="playAllProgress" class="playall-progress">
+        <div class="playall-progress-head">
+          <div class="playall-progress-left">
+            <button id="playAllWidgetBtn" class="secondary playall-widget-btn" type="button">Play All</button>
+            <button id="flashCardToggleBtn" class="secondary playall-toggle-btn" type="button" aria-pressed="false">Flash Card Off</button>
+            <button id="flashCardPrevBtn" class="secondary playall-toggle-btn" type="button">Prev</button>
+            <button id="flashCardNextBtn" class="secondary playall-toggle-btn" type="button">Next</button>
+            <label class="playall-repeat-label" for="playAllRepeatSelect">Repeat</label>
+            <select id="playAllRepeatSelect" class="playall-repeat-select" aria-label="Repeat each word">
+              <option value="1">1x</option>
+              <option value="2" selected>2x</option>
+              <option value="3">3x</option>
+            </select>
+            <label class="playall-repeat-label" for="playAllIntervalSelect">Interval</label>
+            <select id="playAllIntervalSelect" class="playall-repeat-select" aria-label="Interval between plays">
+              <option value="1000">1s</option>
+              <option value="1500" selected>1.5s</option>
+              <option value="2000">2s</option>
+            </select>
+            <label class="playall-source-toggle">
+              <input id="playAllReadSourceCheckbox" type="checkbox" checked />
+              <span>Read both</span>
+            </label>
+          </div>
+          <div class="playall-progress-right">
+            <span id="playAllProgressText" class="playall-progress-text">0 / 0</span>
+          </div>
+        </div>
+        <div class="playall-progress-track" role="progressbar" aria-label="Play all progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <div id="playAllProgressFill" class="playall-progress-fill"></div>
+        </div>
+      </div>
       <div class="tabs-bar">
         <div id="tabsList" class="tabs-list"></div>
         <div class="tabs-menu-wrap">
+          <button id="controllerToggleBtn" class="secondary controller-toggle-btn" type="button" aria-expanded="true" aria-label="Collapse controller">▴</button>
           <button id="tabsMenuBtn" class="tabs-menu-btn" aria-label="More actions" title="More actions">⋯</button>
           <div id="tabsMenuPanel" class="tabs-menu-panel" hidden>
-            <button id="exportBtn" class="tabs-menu-item" type="button">Export Data</button>
-            <button id="importBtn" class="tabs-menu-item" type="button">Import Data</button>
-            <button id="playAllBtn" class="tabs-menu-item" type="button">Play All</button>
-            <div class="tabs-menu-sep"></div>
             <button id="batchDeleteBtn" class="tabs-menu-item danger" type="button" disabled>Delete Selected Items</button>
             <button id="clearBtn" class="tabs-menu-item danger" type="button">Clear All Items</button>
             <button id="deleteTabBtn" class="tabs-menu-item danger" type="button">Delete This Tab</button>
             <div class="tabs-menu-sep"></div>
-            <div class="tabs-menu-label">Move To</div>
-            <div id="moveToList" class="tabs-move-list"></div>
+            <div class="tabs-submenu-wrap">
+              <button id="moveToTriggerBtn" class="tabs-menu-item tabs-submenu-trigger" type="button" aria-haspopup="true" aria-expanded="false">
+                <span>Move To</span>
+                <span class="tabs-submenu-arrow" aria-hidden="true">▸</span>
+              </button>
+              <div id="moveToSubmenu" class="tabs-submenu-panel" hidden>
+                <div id="moveToList" class="tabs-move-list"></div>
+              </div>
+            </div>
+            <div class="tabs-menu-sep"></div>
+            <button id="exportBtn" class="tabs-menu-item" type="button">Export Data</button>
+            <button id="importBtn" class="tabs-menu-item" type="button">Import Data</button>
           </div>
         </div>
       </div>
       <input id="importFileInput" type="file" accept="application/json,.json" hidden />
+      <div id="flashCardStage" class="flashcard-stage" hidden></div>
       <ul id="savedList" class="saved-list"></ul>
     </section>
   </main>

@@ -10,7 +10,20 @@ const readingInline = document.getElementById('readingInline');
 const kanaInline = document.getElementById('kanaInline');
 const tabsMenuBtn = document.getElementById('tabsMenuBtn');
 const tabsMenuPanel = document.getElementById('tabsMenuPanel');
+const moveToTriggerBtn = document.getElementById('moveToTriggerBtn');
+const moveToSubmenu = document.getElementById('moveToSubmenu');
 const moveToList = document.getElementById('moveToList');
+const playAllProgress = document.getElementById('playAllProgress');
+const controllerToggleBtn = document.getElementById('controllerToggleBtn');
+const playAllProgressText = document.getElementById('playAllProgressText');
+const playAllProgressFill = document.getElementById('playAllProgressFill');
+const playAllWidgetBtn = document.getElementById('playAllWidgetBtn');
+const flashCardToggleBtn = document.getElementById('flashCardToggleBtn');
+const flashCardPrevBtn = document.getElementById('flashCardPrevBtn');
+const flashCardNextBtn = document.getElementById('flashCardNextBtn');
+const playAllRepeatSelect = document.getElementById('playAllRepeatSelect');
+const playAllIntervalSelect = document.getElementById('playAllIntervalSelect');
+const playAllReadSourceCheckbox = document.getElementById('playAllReadSourceCheckbox');
 const saveBtn = document.getElementById('saveBtn');
 const exportBtn = document.getElementById('exportBtn');
 const importBtn = document.getElementById('importBtn');
@@ -25,6 +38,7 @@ const deleteTabBtn = document.getElementById('deleteTabBtn');
     const pinyinText = document.getElementById('pinyinText');
     const katakanaText = document.getElementById('katakanaText');
     const errorBox = document.getElementById('errorBox');
+    const flashCardStage = document.getElementById('flashCardStage');
     const savedList = document.getElementById('savedList');
 
     const STORAGE_KEY = 'chinese_word_helper_saved_v2';
@@ -46,6 +60,12 @@ let requestCounter = 0;
 let playAllRunId = 0;
 let nowPlayingSavedId = null;
 let isPlayAllActive = false;
+let playAllProgressCurrent = 0;
+let playAllProgressTotal = 0;
+let isFlashCardMode = false;
+let flashCardCurrentId = null;
+let flashCardHideAnswer = false;
+let isControllerCollapsed = false;
 
 function shouldAutoFocusInput() {
   return !window.matchMedia('(max-width: 940px)').matches;
@@ -56,8 +76,83 @@ function focusInputIfDesktop() {
   sourceText.focus();
 }
 
+function updateControllerCollapseUi() {
+  if (!playAllProgress || !controllerToggleBtn) return;
+  playAllProgress.hidden = isControllerCollapsed;
+  controllerToggleBtn.textContent = isControllerCollapsed ? '▾' : '▴';
+  controllerToggleBtn.setAttribute('aria-expanded', String(!isControllerCollapsed));
+  controllerToggleBtn.setAttribute('aria-label', isControllerCollapsed ? 'Expand controller' : 'Collapse controller');
+}
+
+function updateFlashCardToggleUi() {
+  if (!flashCardToggleBtn) return;
+  flashCardToggleBtn.textContent = isFlashCardMode ? 'Flash Card On' : 'Flash Card Off';
+  flashCardToggleBtn.setAttribute('aria-pressed', String(isFlashCardMode));
+  flashCardToggleBtn.classList.toggle('is-on', isFlashCardMode);
+}
+
+function toggleFlashCardMode() {
+  isFlashCardMode = !isFlashCardMode;
+  if (isFlashCardMode && !flashCardCurrentId) {
+    const activeTab = getActiveTab();
+    const items = activeTab ? getTabItems(activeTab) : [];
+    flashCardCurrentId = items[0] ? items[0].id : null;
+  }
+  updateFlashCardToggleUi();
+  updateFlashCardNavButtons();
+  renderSavedItems();
+}
+
+function moveFlashCard(step) {
+  if (!isFlashCardMode || isPlayAllActive) return;
+  const activeTab = getActiveTab();
+  const items = activeTab ? getTabItems(activeTab) : [];
+  if (!items.length) return;
+  const currentId = flashCardCurrentId && items.some(item => item.id === flashCardCurrentId)
+    ? flashCardCurrentId
+    : items[0].id;
+  const currentIndex = items.findIndex(item => item.id === currentId);
+  const nextIndex = currentIndex + step;
+  if (nextIndex < 0 || nextIndex >= items.length) return;
+  flashCardCurrentId = items[nextIndex].id;
+  updateFlashCardNavButtons();
+  renderSavedItems();
+}
+
+function updateFlashCardNavButtons() {
+  if (!flashCardPrevBtn || !flashCardNextBtn) return;
+  const activeTab = getActiveTab();
+  const items = activeTab ? getTabItems(activeTab) : [];
+  const enabled = isFlashCardMode && !isPlayAllActive && items.length > 0;
+  if (!enabled) {
+    flashCardPrevBtn.disabled = true;
+    flashCardNextBtn.disabled = true;
+    return;
+  }
+  const currentId = flashCardCurrentId && items.some(item => item.id === flashCardCurrentId)
+    ? flashCardCurrentId
+    : items[0].id;
+  const currentIndex = items.findIndex(item => item.id === currentId);
+  flashCardPrevBtn.disabled = currentIndex <= 0;
+  flashCardNextBtn.disabled = currentIndex >= items.length - 1;
+}
+
+function closeMoveToSubmenu() {
+  if (!moveToSubmenu || !moveToTriggerBtn) return;
+  moveToSubmenu.hidden = true;
+  moveToTriggerBtn.setAttribute('aria-expanded', 'false');
+}
+
+function openMoveToSubmenu() {
+  if (!moveToSubmenu || !moveToTriggerBtn) return;
+  moveToSubmenu.hidden = false;
+  moveToTriggerBtn.setAttribute('aria-expanded', 'true');
+}
+
 ensureWanakanaLoaded();
 applyModeToUi();
+updateControllerCollapseUi();
+updateFlashCardToggleUi();
 renderTabs();
 renderSavedItems();
 
@@ -70,7 +165,12 @@ savedList.addEventListener('dragover', (event) => {
     savedList.classList.remove('drag-over-end');
     return;
   }
-  savedList.classList.add('drag-over-end');
+  if (isDropAtSavedListEnd(event.clientY)) {
+    clearRowDropIndicators();
+    savedList.classList.add('drag-over-end');
+    return;
+  }
+  savedList.classList.remove('drag-over-end');
 });
 
 savedList.addEventListener('dragleave', (event) => {
@@ -85,7 +185,9 @@ savedList.addEventListener('drop', (event) => {
   const target = event.target;
   if (target instanceof HTMLElement && target.closest('.saved-item')) return;
   event.preventDefault();
-  reorderSavedItemsToEnd(dragSourceId);
+  if (isDropAtSavedListEnd(event.clientY)) {
+    reorderSavedItemsToEnd(dragSourceId);
+  }
   savedList.classList.remove('drag-over-end');
 });
 
@@ -123,10 +225,26 @@ tabsMenuBtn.addEventListener('click', (event) => {
   if (willOpen) {
     renderMoveToMenuItems();
     updateTabsMenuState();
+    closeMoveToSubmenu();
+  } else {
+    closeMoveToSubmenu();
   }
   tabsMenuPanel.hidden = !willOpen;
   tabsMenuBtn.setAttribute('aria-expanded', String(willOpen));
 });
+
+if (moveToTriggerBtn && moveToSubmenu) {
+  moveToTriggerBtn.addEventListener('click', (event) => {
+    event.stopPropagation();
+    if (tabsMenuPanel.hidden) return;
+    if (moveToSubmenu.hidden) {
+      renderMoveToMenuItems();
+      openMoveToSubmenu();
+      return;
+    }
+    closeMoveToSubmenu();
+  });
+}
 
     document.addEventListener('click', (event) => {
       if (tabsMenuPanel.hidden) return;
@@ -134,12 +252,14 @@ tabsMenuBtn.addEventListener('click', (event) => {
       if (!(target instanceof Node)) return;
       if (tabsMenuPanel.contains(target) || tabsMenuBtn.contains(target)) return;
       tabsMenuPanel.hidden = true;
+      closeMoveToSubmenu();
       tabsMenuBtn.setAttribute('aria-expanded', 'false');
     });
 
     document.addEventListener('keydown', (event) => {
       if (event.key !== 'Escape') return;
       tabsMenuPanel.hidden = true;
+      closeMoveToSubmenu();
       tabsMenuBtn.setAttribute('aria-expanded', 'false');
     });
 
@@ -192,6 +312,7 @@ batchDeleteBtn.addEventListener('click', () => {
   selectedSavedIds.clear();
   lastSelectedSavedId = null;
   tabsMenuPanel.hidden = true;
+  closeMoveToSubmenu();
   tabsMenuBtn.setAttribute('aria-expanded', 'false');
   persistAppState();
   renderTabs();
@@ -205,6 +326,7 @@ clearBtn.addEventListener('click', () => {
   selectedSavedIds.clear();
   lastSelectedSavedId = null;
   tabsMenuPanel.hidden = true;
+  closeMoveToSubmenu();
   tabsMenuBtn.setAttribute('aria-expanded', 'false');
   persistAppState();
   renderTabs();
@@ -217,18 +339,21 @@ deleteTabBtn.addEventListener('click', () => {
   const modeState = getModeState();
   if (!modeState || modeState.tabs.length <= 1) return;
   tabsMenuPanel.hidden = true;
+  closeMoveToSubmenu();
   tabsMenuBtn.setAttribute('aria-expanded', 'false');
   deleteTab(activeTab.id);
 });
 
     exportBtn.addEventListener('click', () => {
       tabsMenuPanel.hidden = true;
+      closeMoveToSubmenu();
       tabsMenuBtn.setAttribute('aria-expanded', 'false');
       exportAppStateAsJson();
     });
 
 importBtn.addEventListener('click', () => {
   tabsMenuPanel.hidden = true;
+  closeMoveToSubmenu();
   tabsMenuBtn.setAttribute('aria-expanded', 'false');
   importFileInput.click();
 });
@@ -236,14 +361,40 @@ importBtn.addEventListener('click', () => {
 if (playAllBtn) {
   playAllBtn.addEventListener('click', () => {
     tabsMenuPanel.hidden = true;
+    closeMoveToSubmenu();
     tabsMenuBtn.setAttribute('aria-expanded', 'false');
-    if (isPlayAllActive) {
-      stopPlayAll();
-      window.speechSynthesis.cancel();
-      setNowPlayingSavedId(null);
-      return;
-    }
-    playAllSavedItems();
+    togglePlayAllPlayback();
+  });
+}
+
+if (playAllWidgetBtn) {
+  playAllWidgetBtn.addEventListener('click', () => {
+    togglePlayAllPlayback();
+  });
+}
+
+if (controllerToggleBtn) {
+  controllerToggleBtn.addEventListener('click', () => {
+    isControllerCollapsed = !isControllerCollapsed;
+    updateControllerCollapseUi();
+  });
+}
+
+if (flashCardToggleBtn) {
+  flashCardToggleBtn.addEventListener('click', () => {
+    toggleFlashCardMode();
+  });
+}
+
+if (flashCardPrevBtn) {
+  flashCardPrevBtn.addEventListener('click', () => {
+    moveFlashCard(-1);
+  });
+}
+
+if (flashCardNextBtn) {
+  flashCardNextBtn.addEventListener('click', () => {
+    moveFlashCard(1);
   });
 }
 
@@ -1114,13 +1265,112 @@ if (playAllBtn) {
         isPlayAllActive = false;
         updateTabsMenuState();
       }
+      flashCardHideAnswer = false;
+      setPlayAllProgress(0, playAllProgressTotal);
+    }
+
+    function setPlayAllProgress(current, total) {
+      if (!playAllProgress || !playAllProgressText || !playAllProgressFill) return;
+      const safeTotal = Math.max(0, Number(total) || 0);
+      const safeCurrent = Math.max(0, Math.min(Number(current) || 0, safeTotal));
+      playAllProgressCurrent = safeCurrent;
+      playAllProgressTotal = safeTotal;
+      playAllProgressText.textContent = `${safeCurrent} / ${safeTotal}`;
+      const percent = safeTotal > 0 ? Math.round((safeCurrent / safeTotal) * 100) : 0;
+      playAllProgressFill.style.width = `${percent}%`;
+      const track = playAllProgressFill.parentElement;
+      if (track) {
+        track.setAttribute('aria-valuenow', String(percent));
+      }
+    }
+
+    function buildPlayAllQueue(activeTab) {
+      if (!activeTab) return [];
+      const items = getTabItems(activeTab);
+      return items
+        .map((item) => ({
+          id: item.id,
+          text: (item.target || item.zh || '').trim(),
+          lang: item.speakLang || (item.mode === 'ja' || item.mode === 'ja_ko' ? 'ja-JP' : (item.mode === 'ko' ? 'ko-KR' : 'zh-CN')),
+          sourceText: (item.source || '').trim(),
+          sourceLang: inferSourceSpeakLang(item)
+        }))
+        .filter(entry => Boolean(entry.text));
+    }
+
+    function getPlayAllRepeatCount() {
+      const raw = playAllRepeatSelect ? Number(playAllRepeatSelect.value) : 1;
+      if (!Number.isFinite(raw)) return 1;
+      return Math.max(1, Math.min(3, Math.floor(raw)));
+    }
+
+    function getPlayAllIntervalMs() {
+      const raw = playAllIntervalSelect ? Number(playAllIntervalSelect.value) : 1500;
+      if (!Number.isFinite(raw)) return 1500;
+      if (raw <= 1000) return 1000;
+      if (raw >= 2000) return 2000;
+      return 1500;
+    }
+
+    function shouldReadSourceDuringPlayAll() {
+      return Boolean(playAllReadSourceCheckbox && playAllReadSourceCheckbox.checked);
+    }
+
+    function inferSourceSpeakLang(item) {
+      const value = String((item && item.source) || '');
+      if (/[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(value)) return 'ko-KR';
+      if (/[\u3040-\u30ff]/.test(value)) return 'ja-JP';
+      if (/[A-Za-z]/.test(value)) return 'en-US';
+      const mode = item && item.mode;
+      if (mode === 'ja_ko') return 'ko-KR';
+      if (mode === 'ja') return 'zh-CN';
+      if (mode === 'ko' || mode === 'zh') return 'ja-JP';
+      if (/[\u4E00-\u9FFF]/.test(value)) return 'zh-CN';
+      return 'en-US';
+    }
+
+    function togglePlayAllPlayback() {
+      if (isPlayAllActive) {
+        stopPlayAll();
+        window.speechSynthesis.cancel();
+        setNowPlayingSavedId(null);
+        return;
+      }
+      playAllSavedItems();
+    }
+
+    function scrollSavedItemIntoView(itemId) {
+      if (!itemId) return;
+      const rows = savedList.querySelectorAll('.saved-item');
+      let targetRow = null;
+      for (const row of rows) {
+        if (row instanceof HTMLElement && row.dataset.id === itemId) {
+          targetRow = row;
+          break;
+        }
+      }
+      if (!targetRow) return;
+      const prefersReducedMotion = window.matchMedia
+        && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      targetRow.scrollIntoView({
+        block: 'nearest',
+        inline: 'nearest',
+        behavior: prefersReducedMotion ? 'auto' : 'smooth'
+      });
     }
 
     function setNowPlayingSavedId(itemId) {
       const nextId = itemId || null;
       if (nowPlayingSavedId === nextId) return;
       nowPlayingSavedId = nextId;
+      if (nextId && isFlashCardMode) {
+        flashCardCurrentId = nextId;
+      }
       renderSavedItems();
+      updateFlashCardNavButtons();
+      if (nextId && !isFlashCardMode) {
+        requestAnimationFrame(() => scrollSavedItemIntoView(nextId));
+      }
     }
 
     function speakText(text, lang) {
@@ -1135,15 +1385,11 @@ if (playAllBtn) {
     function playAllSavedItems() {
       const activeTab = getActiveTab();
       if (!activeTab) return;
-      const items = getTabItems(activeTab);
-      const queue = items
-        .map((item) => ({
-          id: item.id,
-          text: (item.target || item.zh || '').trim(),
-          lang: item.speakLang || (item.mode === 'ja' || item.mode === 'ja_ko' ? 'ja-JP' : (item.mode === 'ko' ? 'ko-KR' : 'zh-CN'))
-        }))
-        .filter(entry => Boolean(entry.text));
+      const queue = buildPlayAllQueue(activeTab);
       if (queue.length === 0) return;
+      const repeatEach = getPlayAllRepeatCount();
+      const intervalMs = getPlayAllIntervalMs();
+      const readSourceToo = shouldReadSourceDuringPlayAll();
 
       const runId = playAllRunId + 1;
       playAllRunId = runId;
@@ -1151,13 +1397,16 @@ if (playAllBtn) {
         isPlayAllActive = true;
         updateTabsMenuState();
       }
+      setPlayAllProgress(0, queue.length);
       window.speechSynthesis.cancel();
-      speakQueue(queue, 0, runId);
+      speakQueue(queue, 0, runId, repeatEach, 1, intervalMs, readSourceToo, 'translated');
     }
 
-    function speakQueue(queue, index, runId) {
+    function speakQueue(queue, index, runId, repeatEach, repeatIndex, intervalMs, readSourceToo, phase) {
       if (runId !== playAllRunId) {
         setNowPlayingSavedId(null);
+        flashCardHideAnswer = false;
+        setPlayAllProgress(0, queue.length);
         return;
       }
       if (index >= queue.length) {
@@ -1167,17 +1416,59 @@ if (playAllBtn) {
       }
 
       const entry = queue[index];
+      const isSourcePhase = phase === 'source' && readSourceToo && Boolean(entry.sourceText);
+      const speakTextValue = isSourcePhase ? entry.sourceText : entry.text;
+      const speakLangValue = isSourcePhase ? entry.sourceLang : entry.lang;
+      const isFirstTranslatedRead = !isSourcePhase && repeatIndex === 1;
+      flashCardHideAnswer = isFlashCardMode && isFirstTranslatedRead;
+      setPlayAllProgress(index + 1, queue.length);
       setNowPlayingSavedId(entry.id);
-      const utterance = buildUtterance(entry.text, entry.lang);
+      const utterance = buildUtterance(speakTextValue, speakLangValue);
       utterance.onend = () => {
         setTimeout(() => {
-          speakQueue(queue, index + 1, runId);
-        }, 1000);
+          if (flashCardHideAnswer) {
+            flashCardHideAnswer = false;
+            if (isFlashCardMode) {
+              renderSavedItems();
+            }
+          }
+          const shouldPlaySourceAfterFirstTranslated = !isSourcePhase
+            && readSourceToo
+            && Boolean(entry.sourceText)
+            && repeatIndex === 1;
+          if (shouldPlaySourceAfterFirstTranslated) {
+            speakQueue(queue, index, runId, repeatEach, repeatIndex, intervalMs, readSourceToo, 'source');
+            return;
+          }
+          if (repeatIndex < repeatEach) {
+            speakQueue(queue, index, runId, repeatEach, repeatIndex + 1, intervalMs, readSourceToo, 'translated');
+            return;
+          }
+          speakQueue(queue, index + 1, runId, repeatEach, 1, intervalMs, readSourceToo, 'translated');
+        }, intervalMs);
       };
       utterance.onerror = () => {
         setTimeout(() => {
-          speakQueue(queue, index + 1, runId);
-        }, 1000);
+          if (flashCardHideAnswer) {
+            flashCardHideAnswer = false;
+            if (isFlashCardMode) {
+              renderSavedItems();
+            }
+          }
+          const shouldPlaySourceAfterFirstTranslated = !isSourcePhase
+            && readSourceToo
+            && Boolean(entry.sourceText)
+            && repeatIndex === 1;
+          if (shouldPlaySourceAfterFirstTranslated) {
+            speakQueue(queue, index, runId, repeatEach, repeatIndex, intervalMs, readSourceToo, 'source');
+            return;
+          }
+          if (repeatIndex < repeatEach) {
+            speakQueue(queue, index, runId, repeatEach, repeatIndex + 1, intervalMs, readSourceToo, 'translated');
+            return;
+          }
+          speakQueue(queue, index + 1, runId, repeatEach, 1, intervalMs, readSourceToo, 'translated');
+        }, intervalMs);
       };
       window.speechSynthesis.speak(utterance);
     }
@@ -1477,13 +1768,28 @@ if (playAllBtn) {
       }
       if (playAllBtn) {
         const activeTab = getActiveTab();
-        const hasPlayableItems = Boolean(activeTab && getTabItems(activeTab).some(item => (item.target || item.zh || '').trim()));
+        const queue = buildPlayAllQueue(activeTab);
+        const hasPlayableItems = queue.length > 0;
         playAllBtn.textContent = isPlayAllActive ? 'Stop Playing' : 'Play All';
         playAllBtn.disabled = !hasPlayableItems && !isPlayAllActive;
         playAllBtn.title = isPlayAllActive
           ? 'Stop playing pronunciations'
           : (hasPlayableItems ? 'Play all saved pronunciations' : 'No items to play');
+        if (!isPlayAllActive) {
+          setPlayAllProgress(0, queue.length);
+        }
       }
+      if (playAllWidgetBtn) {
+        const activeTab = getActiveTab();
+        const queue = buildPlayAllQueue(activeTab);
+        const hasPlayableItems = queue.length > 0;
+        playAllWidgetBtn.textContent = isPlayAllActive ? 'Stop' : 'Play All';
+        playAllWidgetBtn.disabled = !hasPlayableItems && !isPlayAllActive;
+        playAllWidgetBtn.title = isPlayAllActive
+          ? 'Stop playing pronunciations'
+          : (hasPlayableItems ? 'Play all saved pronunciations' : 'No items to play');
+      }
+      updateFlashCardNavButtons();
     }
 
     function clearTabDropHighlights() {
@@ -1602,6 +1908,7 @@ if (playAllBtn) {
       selectedSavedIds.clear();
       lastSelectedSavedId = null;
       tabsMenuPanel.hidden = true;
+      closeMoveToSubmenu();
       tabsMenuBtn.setAttribute('aria-expanded', 'false');
       if (blocked.length > 0) {
         showError(`Moved ${movable.length}. Skipped ${blocked.length} duplicates.`);
@@ -1959,6 +2266,14 @@ function clearRowDropIndicators() {
   });
 }
 
+function isDropAtSavedListEnd(clientY) {
+  const rows = savedList.querySelectorAll('.saved-item');
+  if (rows.length === 0) return true;
+  const lastRow = rows[rows.length - 1];
+  const rect = lastRow.getBoundingClientRect();
+  return clientY > rect.top + rect.height / 2;
+}
+
 function reorderSavedItems(sourceId, targetId, insertAfter) {
   if (!sourceId || !targetId || sourceId === targetId) return;
   const activeTab = getActiveTab();
@@ -2006,16 +2321,88 @@ function reorderSavedItemsToEnd(sourceId) {
   renderSavedItems();
 }
 
+function renderFlashCard(items) {
+  if (!flashCardStage) return;
+  if (!isFlashCardMode) {
+    flashCardStage.hidden = true;
+    savedList.hidden = false;
+    return;
+  }
+
+  savedList.hidden = true;
+  flashCardStage.hidden = false;
+  flashCardStage.innerHTML = '';
+
+  if (!items.length) {
+    const empty = document.createElement('div');
+    empty.className = 'flashcard-empty';
+    empty.textContent = 'No saved words yet.';
+    flashCardStage.appendChild(empty);
+    if (!isPlayAllActive) {
+      setPlayAllProgress(0, 0);
+    }
+    return;
+  }
+
+  if (!flashCardCurrentId || !items.some(item => item.id === flashCardCurrentId)) {
+    flashCardCurrentId = items[0].id;
+  }
+
+  const activeItem = isPlayAllActive && nowPlayingSavedId
+    ? (items.find(item => item.id === nowPlayingSavedId) || items[0])
+    : (items.find(item => item.id === flashCardCurrentId) || items[0]);
+  flashCardCurrentId = activeItem.id;
+  const activeIndex = items.findIndex(item => item.id === activeItem.id);
+  const hideAnswer = isPlayAllActive && flashCardHideAnswer;
+  if (!isPlayAllActive) {
+    setPlayAllProgress(activeIndex + 1, items.length);
+  }
+
+  const card = document.createElement('article');
+  card.className = 'flashcard-card';
+
+  const meta = document.createElement('div');
+  meta.className = 'flashcard-meta';
+  meta.textContent = nowPlayingSavedId ? 'Now Reading' : 'Flash Card';
+
+  const target = document.createElement('div');
+  target.className = 'flashcard-target';
+  target.textContent = activeItem.target || activeItem.zh || '-';
+
+  const reading = document.createElement('div');
+  reading.className = 'flashcard-reading';
+  reading.textContent = hideAnswer ? '...' : (activeItem.reading || activeItem.pinyin || '-');
+  if (hideAnswer) reading.classList.add('is-concealed');
+
+  const source = document.createElement('div');
+  source.className = 'flashcard-source';
+  source.textContent = hideAnswer ? '...' : (activeItem.source || '-');
+  if (hideAnswer) source.classList.add('is-concealed');
+
+  card.appendChild(meta);
+  card.appendChild(target);
+  card.appendChild(reading);
+  card.appendChild(source);
+  flashCardStage.appendChild(card);
+}
+
 function renderSavedItems() {
       const activeTab = getActiveTab();
       const items = activeTab ? getTabItems(activeTab) : [];
       savedList.innerHTML = '';
+
+      if (isFlashCardMode) {
+        renderFlashCard(items);
+        updateBatchDeleteState();
+        return;
+      }
 
       if (items.length === 0) {
         const li = document.createElement('li');
         li.className = 'hint';
         li.textContent = 'No saved words yet.';
         savedList.appendChild(li);
+        renderFlashCard(items);
         updateBatchDeleteState();
         return;
       }
@@ -2146,6 +2533,7 @@ function renderSavedItems() {
         li.appendChild(actionsCell);
         savedList.appendChild(li);
   }
+  renderFlashCard(items);
   updateBatchDeleteState();
   if (!tabsMenuPanel.hidden) {
     renderMoveToMenuItems();
