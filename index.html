@@ -55,7 +55,7 @@
       </div>
       <div class="cell save-cell">
         <div class="cell-label">Save</div>
-        <button id="saveBtn" class="secondary save-inline" aria-label="Save to list" title="Save to list" disabled>Save</button>
+        <button id="saveBtn" class="secondary save-inline" aria-label="Save to list" title="Save to list" disabled>+ Add</button>
       </div>
     </section>
 
@@ -65,7 +65,15 @@
       <div id="playAllProgress" class="playall-progress">
         <div class="playall-progress-head">
           <div class="playall-progress-left">
-            <button id="playAllWidgetBtn" class="secondary playall-widget-btn" type="button">Play All</button>
+            <div class="playall-mode-wrap">
+              <button id="playAllWidgetBtn" class="secondary playall-widget-btn" type="button">Play All</button>
+              <button id="playAllModeBtn" class="secondary playall-mode-btn" type="button" aria-haspopup="true" aria-expanded="false" aria-label="Play mode">▾</button>
+              <div id="playAllModeMenu" class="playall-mode-menu" hidden>
+                <button id="playFromBeginningBtn" class="playall-mode-item" type="button">Play from the beginning</button>
+                <button id="playFromCurrentBtn" class="playall-mode-item" type="button">Play from the current item</button>
+                <button id="playRandomBtn" class="playall-mode-item" type="button">Play at random</button>
+              </div>
+            </div>
             <button id="flashCardToggleBtn" class="secondary playall-toggle-btn" type="button" aria-pressed="false">Flash Card Off</button>
             <button id="flashCardPrevBtn" class="secondary playall-toggle-btn" type="button">Prev</button>
             <button id="flashCardNextBtn" class="secondary playall-toggle-btn" type="button">Next</button>
@@ -100,10 +108,6 @@
           <button id="controllerToggleBtn" class="secondary controller-toggle-btn" type="button" aria-expanded="true" aria-label="Collapse controller">▴</button>
           <button id="tabsMenuBtn" class="tabs-menu-btn" aria-label="More actions" title="More actions">⋯</button>
           <div id="tabsMenuPanel" class="tabs-menu-panel" hidden>
-            <button id="batchDeleteBtn" class="tabs-menu-item danger" type="button" disabled>Delete Selected Items</button>
-            <button id="clearBtn" class="tabs-menu-item danger" type="button">Clear All Items</button>
-            <button id="deleteTabBtn" class="tabs-menu-item danger" type="button">Delete This Tab</button>
-            <div class="tabs-menu-sep"></div>
             <div class="tabs-submenu-wrap">
               <button id="moveToTriggerBtn" class="tabs-menu-item tabs-submenu-trigger" type="button" aria-haspopup="true" aria-expanded="false">
                 <span>Move To</span>
@@ -113,9 +117,35 @@
                 <div id="moveToList" class="tabs-move-list"></div>
               </div>
             </div>
+            <div class="tabs-submenu-wrap">
+              <button id="copyToTriggerBtn" class="tabs-menu-item tabs-submenu-trigger" type="button" aria-haspopup="true" aria-expanded="false">
+                <span>Copy To</span>
+                <span class="tabs-submenu-arrow" aria-hidden="true">▸</span>
+              </button>
+              <div id="copyToSubmenu" class="tabs-submenu-panel" hidden>
+                <div id="copyToList" class="tabs-move-list"></div>
+              </div>
+            </div>
+            <div class="tabs-menu-sep"></div>
+            <button id="batchDeleteBtn" class="tabs-menu-item danger" type="button" disabled>Delete Selected Items</button>
+            <button id="clearBtn" class="tabs-menu-item danger" type="button">Clear All Items</button>
+            <button id="deleteTabBtn" class="tabs-menu-item danger" type="button">Delete This Tab</button>
+            <button id="deleteAllTabsBtn" class="tabs-menu-item danger" type="button">Delete All Tabs</button>
+            <button id="resetEverythingBtn" class="tabs-menu-item danger" type="button">Reset Everything</button>
             <div class="tabs-menu-sep"></div>
             <button id="exportBtn" class="tabs-menu-item" type="button">Export Data</button>
             <button id="importBtn" class="tabs-menu-item" type="button">Import Data</button>
+            <div class="tabs-submenu-wrap">
+              <button id="loadDataTriggerBtn" class="tabs-menu-item tabs-submenu-trigger" type="button" aria-haspopup="true" aria-expanded="false">
+                <span>Load Data</span>
+                <span class="tabs-submenu-arrow" aria-hidden="true">▸</span>
+              </button>
+              <div id="loadDataSubmenu" class="tabs-submenu-panel" hidden>
+                <button id="loadHsk1Btn" class="tabs-menu-item" type="button">HSK Level 1</button>
+                <button id="loadHsk2Btn" class="tabs-menu-item" type="button">HSK Level 2</button>
+                <button id="loadHsk12Btn" class="tabs-menu-item" type="button">HSK Level 1-2</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -124,6 +154,18 @@
       <ul id="savedList" class="saved-list"></ul>
     </section>
   </main>
+  <div id="importChoiceDialog" class="import-choice-dialog" hidden>
+    <div class="import-choice-card" role="dialog" aria-modal="true" aria-labelledby="importChoiceTitle">
+      <h2 id="importChoiceTitle" class="import-choice-title">Import Data</h2>
+      <p class="import-choice-text">Choose how to import.</p>
+      <div class="import-choice-actions">
+        <button id="importChoiceNewTabBtn" class="secondary import-choice-btn" type="button">Add as new tab(s)</button>
+        <button id="importChoiceReplaceBtn" class="import-choice-btn import-choice-danger" type="button">Delete all and import</button>
+        <button id="importChoiceCancelBtn" class="import-choice-btn" type="button">Cancel</button>
+      </div>
+    </div>
+  </div>
+  <button id="scrollTopFab" class="scroll-top-fab" type="button" aria-label="Scroll to top" title="Scroll to top" hidden>↑</button>
 
   <script src="https://cdn.jsdelivr.net/npm/pinyin-pro@3.26.0/dist/index.min.js"></script>
   <script src="app.js"></script>

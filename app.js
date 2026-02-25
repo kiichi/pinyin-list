@@ -13,11 +13,24 @@ const tabsMenuPanel = document.getElementById('tabsMenuPanel');
 const moveToTriggerBtn = document.getElementById('moveToTriggerBtn');
 const moveToSubmenu = document.getElementById('moveToSubmenu');
 const moveToList = document.getElementById('moveToList');
+const copyToTriggerBtn = document.getElementById('copyToTriggerBtn');
+const copyToSubmenu = document.getElementById('copyToSubmenu');
+const copyToList = document.getElementById('copyToList');
+const loadDataTriggerBtn = document.getElementById('loadDataTriggerBtn');
+const loadDataSubmenu = document.getElementById('loadDataSubmenu');
+const loadHsk1Btn = document.getElementById('loadHsk1Btn');
+const loadHsk2Btn = document.getElementById('loadHsk2Btn');
+const loadHsk12Btn = document.getElementById('loadHsk12Btn');
 const playAllProgress = document.getElementById('playAllProgress');
 const controllerToggleBtn = document.getElementById('controllerToggleBtn');
 const playAllProgressText = document.getElementById('playAllProgressText');
 const playAllProgressFill = document.getElementById('playAllProgressFill');
 const playAllWidgetBtn = document.getElementById('playAllWidgetBtn');
+const playAllModeBtn = document.getElementById('playAllModeBtn');
+const playAllModeMenu = document.getElementById('playAllModeMenu');
+const playFromBeginningBtn = document.getElementById('playFromBeginningBtn');
+const playFromCurrentBtn = document.getElementById('playFromCurrentBtn');
+const playRandomBtn = document.getElementById('playRandomBtn');
 const flashCardToggleBtn = document.getElementById('flashCardToggleBtn');
 const flashCardPrevBtn = document.getElementById('flashCardPrevBtn');
 const flashCardNextBtn = document.getElementById('flashCardNextBtn');
@@ -31,8 +44,15 @@ const playAllBtn = document.getElementById('playAllBtn');
 const batchDeleteBtn = document.getElementById('batchDeleteBtn');
 const clearBtn = document.getElementById('clearBtn');
 const deleteTabBtn = document.getElementById('deleteTabBtn');
+const deleteAllTabsBtn = document.getElementById('deleteAllTabsBtn');
+const resetEverythingBtn = document.getElementById('resetEverythingBtn');
     const tabsList = document.getElementById('tabsList');
     const importFileInput = document.getElementById('importFileInput');
+const importChoiceDialog = document.getElementById('importChoiceDialog');
+const importChoiceNewTabBtn = document.getElementById('importChoiceNewTabBtn');
+const importChoiceReplaceBtn = document.getElementById('importChoiceReplaceBtn');
+const importChoiceCancelBtn = document.getElementById('importChoiceCancelBtn');
+const scrollTopFab = document.getElementById('scrollTopFab');
 
     const zhText = document.getElementById('zhText');
     const pinyinText = document.getElementById('pinyinText');
@@ -66,6 +86,8 @@ let isFlashCardMode = false;
 let flashCardCurrentId = null;
 let flashCardHideAnswer = false;
 let isControllerCollapsed = false;
+let importChoiceResolver = null;
+let playAllMainMode = 'beginning';
 
 function shouldAutoFocusInput() {
   return !window.matchMedia('(max-width: 940px)').matches;
@@ -76,12 +98,93 @@ function focusInputIfDesktop() {
   sourceText.focus();
 }
 
+function updateScrollTopFabVisibility() {
+  if (!scrollTopFab) return;
+  scrollTopFab.hidden = window.scrollY < 220;
+}
+
 function updateControllerCollapseUi() {
   if (!playAllProgress || !controllerToggleBtn) return;
   playAllProgress.hidden = isControllerCollapsed;
   controllerToggleBtn.textContent = isControllerCollapsed ? '▾' : '▴';
   controllerToggleBtn.setAttribute('aria-expanded', String(!isControllerCollapsed));
   controllerToggleBtn.setAttribute('aria-label', isControllerCollapsed ? 'Expand controller' : 'Collapse controller');
+  if (isControllerCollapsed) {
+    closePlayAllModeMenu();
+  }
+}
+
+function closePlayAllModeMenu() {
+  if (!playAllModeMenu || !playAllModeBtn) return;
+  playAllModeMenu.hidden = true;
+  playAllModeBtn.setAttribute('aria-expanded', 'false');
+}
+
+function normalizePlayAllStartMode(mode) {
+  return mode === 'current' || mode === 'random' ? mode : 'beginning';
+}
+
+function getPlayAllModeLabel(mode) {
+  const normalized = normalizePlayAllStartMode(mode);
+  if (normalized === 'current') return 'Play Current';
+  if (normalized === 'random') return 'Play Random';
+  return 'Play All';
+}
+
+function openPlayAllModeMenu() {
+  if (!playAllModeMenu || !playAllModeBtn) return;
+  playAllModeMenu.hidden = false;
+  playAllModeBtn.setAttribute('aria-expanded', 'true');
+}
+
+function shuffleArray(input) {
+  const out = [...input];
+  for (let i = out.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = out[i];
+    out[i] = out[j];
+    out[j] = temp;
+  }
+  return out;
+}
+
+function getCurrentPlayAnchorId() {
+  if (nowPlayingSavedId) return nowPlayingSavedId;
+  if (flashCardCurrentId) return flashCardCurrentId;
+  if (selectedSavedIds.size === 1) {
+    for (const id of selectedSavedIds) return id;
+  }
+  return null;
+}
+
+function closeImportChoiceDialog(choice = 'cancel') {
+  if (!importChoiceDialog) return;
+  importChoiceDialog.hidden = true;
+  const resolver = importChoiceResolver;
+  importChoiceResolver = null;
+  if (resolver) resolver(choice);
+}
+
+function openImportChoiceDialog() {
+  if (!importChoiceDialog) return;
+  importChoiceDialog.hidden = false;
+  if (importChoiceNewTabBtn) {
+    requestAnimationFrame(() => {
+      importChoiceNewTabBtn.focus();
+    });
+  }
+}
+
+function askImportMode() {
+  if (!importChoiceDialog) return Promise.resolve('merge');
+  if (importChoiceResolver) {
+    importChoiceResolver('cancel');
+    importChoiceResolver = null;
+  }
+  openImportChoiceDialog();
+  return new Promise((resolve) => {
+    importChoiceResolver = resolve;
+  });
 }
 
 function updateFlashCardToggleUi() {
@@ -147,6 +250,43 @@ function openMoveToSubmenu() {
   if (!moveToSubmenu || !moveToTriggerBtn) return;
   moveToSubmenu.hidden = false;
   moveToTriggerBtn.setAttribute('aria-expanded', 'true');
+}
+
+function closeCopyToSubmenu() {
+  if (!copyToSubmenu || !copyToTriggerBtn) return;
+  copyToSubmenu.hidden = true;
+  copyToTriggerBtn.setAttribute('aria-expanded', 'false');
+}
+
+function openCopyToSubmenu() {
+  if (!copyToSubmenu || !copyToTriggerBtn) return;
+  copyToSubmenu.hidden = false;
+  copyToTriggerBtn.setAttribute('aria-expanded', 'true');
+}
+
+function closeLoadDataSubmenu() {
+  if (!loadDataSubmenu || !loadDataTriggerBtn) return;
+  loadDataSubmenu.hidden = true;
+  loadDataTriggerBtn.setAttribute('aria-expanded', 'false');
+}
+
+function openLoadDataSubmenu() {
+  if (!loadDataSubmenu || !loadDataTriggerBtn) return;
+  loadDataSubmenu.hidden = false;
+  loadDataTriggerBtn.setAttribute('aria-expanded', 'true');
+}
+
+function wireSubmenuHover(triggerBtn, onEnter, onLeave) {
+  if (!triggerBtn) return;
+  const wrap = triggerBtn.closest('.tabs-submenu-wrap');
+  if (!wrap) return;
+  wrap.addEventListener('mouseenter', () => {
+    if (tabsMenuPanel.hidden) return;
+    onEnter();
+  });
+  wrap.addEventListener('mouseleave', () => {
+    onLeave();
+  });
 }
 
 ensureWanakanaLoaded();
@@ -224,10 +364,15 @@ tabsMenuBtn.addEventListener('click', (event) => {
   const willOpen = tabsMenuPanel.hidden;
   if (willOpen) {
     renderMoveToMenuItems();
+    renderCopyToMenuItems();
     updateTabsMenuState();
     closeMoveToSubmenu();
+    closeCopyToSubmenu();
+    closeLoadDataSubmenu();
   } else {
     closeMoveToSubmenu();
+    closeCopyToSubmenu();
+    closeLoadDataSubmenu();
   }
   tabsMenuPanel.hidden = !willOpen;
   tabsMenuBtn.setAttribute('aria-expanded', String(willOpen));
@@ -237,13 +382,80 @@ if (moveToTriggerBtn && moveToSubmenu) {
   moveToTriggerBtn.addEventListener('click', (event) => {
     event.stopPropagation();
     if (tabsMenuPanel.hidden) return;
+    if (moveToTriggerBtn.disabled) return;
     if (moveToSubmenu.hidden) {
+      closeCopyToSubmenu();
+      closeLoadDataSubmenu();
       renderMoveToMenuItems();
       openMoveToSubmenu();
       return;
     }
     closeMoveToSubmenu();
   });
+
+  wireSubmenuHover(
+    moveToTriggerBtn,
+    () => {
+      if (moveToTriggerBtn.disabled) return;
+      closeCopyToSubmenu();
+      closeLoadDataSubmenu();
+      renderMoveToMenuItems();
+      openMoveToSubmenu();
+    },
+    () => closeMoveToSubmenu()
+  );
+}
+
+if (copyToTriggerBtn && copyToSubmenu) {
+  copyToTriggerBtn.addEventListener('click', (event) => {
+    event.stopPropagation();
+    if (tabsMenuPanel.hidden) return;
+    if (copyToTriggerBtn.disabled) return;
+    if (copyToSubmenu.hidden) {
+      closeMoveToSubmenu();
+      closeLoadDataSubmenu();
+      renderCopyToMenuItems();
+      openCopyToSubmenu();
+      return;
+    }
+    closeCopyToSubmenu();
+  });
+
+  wireSubmenuHover(
+    copyToTriggerBtn,
+    () => {
+      if (copyToTriggerBtn.disabled) return;
+      closeMoveToSubmenu();
+      closeLoadDataSubmenu();
+      renderCopyToMenuItems();
+      openCopyToSubmenu();
+    },
+    () => closeCopyToSubmenu()
+  );
+}
+
+if (loadDataTriggerBtn && loadDataSubmenu) {
+  loadDataTriggerBtn.addEventListener('click', (event) => {
+    event.stopPropagation();
+    if (tabsMenuPanel.hidden) return;
+    if (loadDataSubmenu.hidden) {
+      closeMoveToSubmenu();
+      closeCopyToSubmenu();
+      openLoadDataSubmenu();
+      return;
+    }
+    closeLoadDataSubmenu();
+  });
+
+  wireSubmenuHover(
+    loadDataTriggerBtn,
+    () => {
+      closeMoveToSubmenu();
+      closeCopyToSubmenu();
+      openLoadDataSubmenu();
+    },
+    () => closeLoadDataSubmenu()
+  );
 }
 
     document.addEventListener('click', (event) => {
@@ -253,14 +465,31 @@ if (moveToTriggerBtn && moveToSubmenu) {
       if (tabsMenuPanel.contains(target) || tabsMenuBtn.contains(target)) return;
       tabsMenuPanel.hidden = true;
       closeMoveToSubmenu();
+      closeCopyToSubmenu();
+      closeLoadDataSubmenu();
       tabsMenuBtn.setAttribute('aria-expanded', 'false');
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!playAllModeMenu || playAllModeMenu.hidden) return;
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+      if (playAllModeMenu.contains(target) || (playAllModeBtn && playAllModeBtn.contains(target))) return;
+      closePlayAllModeMenu();
     });
 
     document.addEventListener('keydown', (event) => {
       if (event.key !== 'Escape') return;
+      if (importChoiceDialog && !importChoiceDialog.hidden) {
+        closeImportChoiceDialog('cancel');
+        return;
+      }
       tabsMenuPanel.hidden = true;
       closeMoveToSubmenu();
+      closeCopyToSubmenu();
+      closeLoadDataSubmenu();
       tabsMenuBtn.setAttribute('aria-expanded', 'false');
+      closePlayAllModeMenu();
     });
 
     speakBtn.addEventListener('click', () => {
@@ -313,6 +542,8 @@ batchDeleteBtn.addEventListener('click', () => {
   lastSelectedSavedId = null;
   tabsMenuPanel.hidden = true;
   closeMoveToSubmenu();
+  closeCopyToSubmenu();
+  closeLoadDataSubmenu();
   tabsMenuBtn.setAttribute('aria-expanded', 'false');
   persistAppState();
   renderTabs();
@@ -327,6 +558,8 @@ clearBtn.addEventListener('click', () => {
   lastSelectedSavedId = null;
   tabsMenuPanel.hidden = true;
   closeMoveToSubmenu();
+  closeCopyToSubmenu();
+  closeLoadDataSubmenu();
   tabsMenuBtn.setAttribute('aria-expanded', 'false');
   persistAppState();
   renderTabs();
@@ -340,13 +573,79 @@ deleteTabBtn.addEventListener('click', () => {
   if (!modeState || modeState.tabs.length <= 1) return;
   tabsMenuPanel.hidden = true;
   closeMoveToSubmenu();
+  closeCopyToSubmenu();
+  closeLoadDataSubmenu();
   tabsMenuBtn.setAttribute('aria-expanded', 'false');
   deleteTab(activeTab.id);
 });
 
+if (deleteAllTabsBtn) {
+  deleteAllTabsBtn.addEventListener('click', () => {
+    const modeState = getModeState();
+    if (!modeState || !Array.isArray(modeState.tabs) || modeState.tabs.length === 0) return;
+    const ok = window.confirm('Delete all tabs? This cannot be undone.');
+    if (!ok) return;
+    const fresh = createTab('List 1');
+    modeState.tabs = [fresh];
+    modeState.activeTabId = fresh.id;
+    selectedSavedIds.clear();
+    lastSelectedSavedId = null;
+    editingTabId = null;
+    tabsMenuPanel.hidden = true;
+    closeMoveToSubmenu();
+    closeCopyToSubmenu();
+    closeLoadDataSubmenu();
+    tabsMenuBtn.setAttribute('aria-expanded', 'false');
+    persistAppState();
+    renderTabs();
+    renderSavedItems();
+    showError('Deleted all tabs.');
+  });
+}
+
+if (resetEverythingBtn) {
+  resetEverythingBtn.addEventListener('click', () => {
+    const ok = window.confirm('Reset everything? This will delete all tabs and data in all modes.');
+    if (!ok) return;
+    window.speechSynthesis.cancel();
+    appMode = 'zh';
+    persistAppMode(appMode);
+    appState = createDefaultAppState();
+    selectedSavedIds.clear();
+    lastSelectedSavedId = null;
+    editingTabId = null;
+    nowPlayingSavedId = null;
+    isPlayAllActive = false;
+    playAllRunId += 1;
+    flashCardCurrentId = null;
+    flashCardHideAnswer = false;
+    sourceText.value = '';
+    currentResult = null;
+    zhText.textContent = '-';
+    pinyinText.textContent = '-';
+    katakanaText.textContent = '-';
+    speakBtn.disabled = true;
+    saveBtn.disabled = true;
+    tabsMenuPanel.hidden = true;
+    closeMoveToSubmenu();
+    closeCopyToSubmenu();
+    closeLoadDataSubmenu();
+    closePlayAllModeMenu();
+    tabsMenuBtn.setAttribute('aria-expanded', 'false');
+    applyModeToUi();
+    persistAppState();
+    renderTabs();
+    renderSavedItems();
+    showError('Reset complete.');
+    focusInputIfDesktop();
+  });
+}
+
     exportBtn.addEventListener('click', () => {
       tabsMenuPanel.hidden = true;
       closeMoveToSubmenu();
+      closeCopyToSubmenu();
+      closeLoadDataSubmenu();
       tabsMenuBtn.setAttribute('aria-expanded', 'false');
       exportAppStateAsJson();
     });
@@ -354,14 +653,51 @@ deleteTabBtn.addEventListener('click', () => {
 importBtn.addEventListener('click', () => {
   tabsMenuPanel.hidden = true;
   closeMoveToSubmenu();
+  closeCopyToSubmenu();
+  closeLoadDataSubmenu();
   tabsMenuBtn.setAttribute('aria-expanded', 'false');
   importFileInput.click();
 });
+
+if (loadHsk1Btn) {
+  loadHsk1Btn.addEventListener('click', () => {
+    tabsMenuPanel.hidden = true;
+    closeMoveToSubmenu();
+    closeCopyToSubmenu();
+    closeLoadDataSubmenu();
+    tabsMenuBtn.setAttribute('aria-expanded', 'false');
+    loadPresetDataIntoActiveTab('data/hsk1.json', 'HSK Level 1');
+  });
+}
+
+if (loadHsk2Btn) {
+  loadHsk2Btn.addEventListener('click', () => {
+    tabsMenuPanel.hidden = true;
+    closeMoveToSubmenu();
+    closeCopyToSubmenu();
+    closeLoadDataSubmenu();
+    tabsMenuBtn.setAttribute('aria-expanded', 'false');
+    loadPresetDataIntoActiveTab('data/hsk2.json', 'HSK Level 2');
+  });
+}
+
+if (loadHsk12Btn) {
+  loadHsk12Btn.addEventListener('click', () => {
+    tabsMenuPanel.hidden = true;
+    closeMoveToSubmenu();
+    closeCopyToSubmenu();
+    closeLoadDataSubmenu();
+    tabsMenuBtn.setAttribute('aria-expanded', 'false');
+    loadPresetDataIntoActiveTab('data/hsk1-2.json', 'HSK Level 1-2');
+  });
+}
 
 if (playAllBtn) {
   playAllBtn.addEventListener('click', () => {
     tabsMenuPanel.hidden = true;
     closeMoveToSubmenu();
+    closeCopyToSubmenu();
+    closeLoadDataSubmenu();
     tabsMenuBtn.setAttribute('aria-expanded', 'false');
     togglePlayAllPlayback();
   });
@@ -369,7 +705,43 @@ if (playAllBtn) {
 
 if (playAllWidgetBtn) {
   playAllWidgetBtn.addEventListener('click', () => {
+    closePlayAllModeMenu();
     togglePlayAllPlayback();
+  });
+}
+
+if (playAllModeBtn && playAllModeMenu) {
+  playAllModeBtn.addEventListener('click', (event) => {
+    event.stopPropagation();
+    if (playAllModeMenu.hidden) {
+      openPlayAllModeMenu();
+      return;
+    }
+    closePlayAllModeMenu();
+  });
+}
+
+if (playFromBeginningBtn) {
+  playFromBeginningBtn.addEventListener('click', () => {
+    playAllMainMode = 'beginning';
+    closePlayAllModeMenu();
+    startPlayAllWithMode('beginning');
+  });
+}
+
+if (playFromCurrentBtn) {
+  playFromCurrentBtn.addEventListener('click', () => {
+    playAllMainMode = 'current';
+    closePlayAllModeMenu();
+    startPlayAllWithMode('current');
+  });
+}
+
+if (playRandomBtn) {
+  playRandomBtn.addEventListener('click', () => {
+    playAllMainMode = 'random';
+    closePlayAllModeMenu();
+    startPlayAllWithMode('random');
   });
 }
 
@@ -398,6 +770,45 @@ if (flashCardNextBtn) {
   });
 }
 
+if (importChoiceNewTabBtn) {
+  importChoiceNewTabBtn.addEventListener('click', () => {
+    closeImportChoiceDialog('newTab');
+  });
+}
+
+if (importChoiceReplaceBtn) {
+  importChoiceReplaceBtn.addEventListener('click', () => {
+    closeImportChoiceDialog('replace');
+  });
+}
+
+if (importChoiceCancelBtn) {
+  importChoiceCancelBtn.addEventListener('click', () => {
+    closeImportChoiceDialog('cancel');
+  });
+}
+
+if (importChoiceDialog) {
+  importChoiceDialog.addEventListener('click', (event) => {
+    if (event.target === importChoiceDialog) {
+      closeImportChoiceDialog('cancel');
+    }
+  });
+}
+
+if (scrollTopFab) {
+  scrollTopFab.addEventListener('click', () => {
+    const prefersReducedMotion = window.matchMedia
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    window.scrollTo({
+      top: 0,
+      behavior: prefersReducedMotion ? 'auto' : 'smooth'
+    });
+  });
+  window.addEventListener('scroll', updateScrollTopFabVisibility, { passive: true });
+  updateScrollTopFabVisibility();
+}
+
     importFileInput.addEventListener('change', async () => {
       const file = importFileInput.files && importFileInput.files[0];
       importFileInput.value = '';
@@ -411,14 +822,25 @@ if (flashCardNextBtn) {
           showError('Invalid JSON format for import.');
           return;
         }
-
-        appState = imported;
-        selectedSavedIds.clear();
-        editingTabId = null;
-        persistAppState();
-        renderTabs();
-        renderSavedItems();
-        showError('');
+        const importedTabs = collectImportedTabsForMode(imported, appMode);
+        const importMode = await askImportMode();
+        if (importMode === 'cancel') {
+          showError('Import canceled.');
+          return;
+        }
+        if (importMode === 'newTab') {
+          if (importedTabs.length === 0) {
+            showError(`No ${appMode.toUpperCase()} tabs found in import file.`);
+            return;
+          }
+          importTabsIntoNewTabs(importedTabs);
+          return;
+        }
+        if (!confirmReplaceImport()) {
+          showError('Import canceled.');
+          return;
+        }
+        replaceAllTabsWithImportedTabs(importedTabs);
       } catch {
         showError('Failed to import JSON file.');
       }
@@ -1329,6 +1751,16 @@ if (flashCardNextBtn) {
       return 'en-US';
     }
 
+    function startPlayAllWithMode(mode = 'beginning') {
+      const startMode = normalizePlayAllStartMode(mode);
+      if (isPlayAllActive) {
+        stopPlayAll();
+        window.speechSynthesis.cancel();
+        setNowPlayingSavedId(null);
+      }
+      playAllSavedItems(startMode);
+    }
+
     function togglePlayAllPlayback() {
       if (isPlayAllActive) {
         stopPlayAll();
@@ -1336,7 +1768,7 @@ if (flashCardNextBtn) {
         setNowPlayingSavedId(null);
         return;
       }
-      playAllSavedItems();
+      playAllSavedItems(playAllMainMode);
     }
 
     function scrollSavedItemIntoView(itemId) {
@@ -1382,11 +1814,25 @@ if (flashCardNextBtn) {
       window.speechSynthesis.speak(utterance);
     }
 
-    function playAllSavedItems() {
+    function playAllSavedItems(startMode = 'beginning') {
       const activeTab = getActiveTab();
       if (!activeTab) return;
-      const queue = buildPlayAllQueue(activeTab);
-      if (queue.length === 0) return;
+      const baseQueue = buildPlayAllQueue(activeTab);
+      if (baseQueue.length === 0) return;
+      let queue = baseQueue;
+      const mode = normalizePlayAllStartMode(startMode);
+      let progressOffset = 0;
+      let progressTotal = baseQueue.length;
+      if (mode === 'current') {
+        const anchorId = getCurrentPlayAnchorId();
+        const anchorIndex = anchorId ? queue.findIndex(entry => entry.id === anchorId) : -1;
+        if (anchorIndex >= 0) {
+          progressOffset = anchorIndex;
+          queue = queue.slice(anchorIndex);
+        }
+      } else if (mode === 'random') {
+        queue = shuffleArray(queue);
+      }
       const repeatEach = getPlayAllRepeatCount();
       const intervalMs = getPlayAllIntervalMs();
       const readSourceToo = shouldReadSourceDuringPlayAll();
@@ -1397,16 +1843,16 @@ if (flashCardNextBtn) {
         isPlayAllActive = true;
         updateTabsMenuState();
       }
-      setPlayAllProgress(0, queue.length);
+      setPlayAllProgress(progressOffset, progressTotal);
       window.speechSynthesis.cancel();
-      speakQueue(queue, 0, runId, repeatEach, 1, intervalMs, readSourceToo, 'translated');
+      speakQueue(queue, 0, runId, repeatEach, 1, intervalMs, readSourceToo, 'translated', progressOffset, progressTotal);
     }
 
-    function speakQueue(queue, index, runId, repeatEach, repeatIndex, intervalMs, readSourceToo, phase) {
+    function speakQueue(queue, index, runId, repeatEach, repeatIndex, intervalMs, readSourceToo, phase, progressOffset = 0, progressTotal = queue.length) {
       if (runId !== playAllRunId) {
         setNowPlayingSavedId(null);
         flashCardHideAnswer = false;
-        setPlayAllProgress(0, queue.length);
+        setPlayAllProgress(0, progressTotal);
         return;
       }
       if (index >= queue.length) {
@@ -1421,7 +1867,7 @@ if (flashCardNextBtn) {
       const speakLangValue = isSourcePhase ? entry.sourceLang : entry.lang;
       const isFirstTranslatedRead = !isSourcePhase && repeatIndex === 1;
       flashCardHideAnswer = isFlashCardMode && isFirstTranslatedRead;
-      setPlayAllProgress(index + 1, queue.length);
+      setPlayAllProgress(progressOffset + index + 1, progressTotal);
       setNowPlayingSavedId(entry.id);
       const utterance = buildUtterance(speakTextValue, speakLangValue);
       utterance.onend = () => {
@@ -1437,14 +1883,14 @@ if (flashCardNextBtn) {
             && Boolean(entry.sourceText)
             && repeatIndex === 1;
           if (shouldPlaySourceAfterFirstTranslated) {
-            speakQueue(queue, index, runId, repeatEach, repeatIndex, intervalMs, readSourceToo, 'source');
+            speakQueue(queue, index, runId, repeatEach, repeatIndex, intervalMs, readSourceToo, 'source', progressOffset, progressTotal);
             return;
           }
           if (repeatIndex < repeatEach) {
-            speakQueue(queue, index, runId, repeatEach, repeatIndex + 1, intervalMs, readSourceToo, 'translated');
+            speakQueue(queue, index, runId, repeatEach, repeatIndex + 1, intervalMs, readSourceToo, 'translated', progressOffset, progressTotal);
             return;
           }
-          speakQueue(queue, index + 1, runId, repeatEach, 1, intervalMs, readSourceToo, 'translated');
+          speakQueue(queue, index + 1, runId, repeatEach, 1, intervalMs, readSourceToo, 'translated', progressOffset, progressTotal);
         }, intervalMs);
       };
       utterance.onerror = () => {
@@ -1460,14 +1906,14 @@ if (flashCardNextBtn) {
             && Boolean(entry.sourceText)
             && repeatIndex === 1;
           if (shouldPlaySourceAfterFirstTranslated) {
-            speakQueue(queue, index, runId, repeatEach, repeatIndex, intervalMs, readSourceToo, 'source');
+            speakQueue(queue, index, runId, repeatEach, repeatIndex, intervalMs, readSourceToo, 'source', progressOffset, progressTotal);
             return;
           }
           if (repeatIndex < repeatEach) {
-            speakQueue(queue, index, runId, repeatEach, repeatIndex + 1, intervalMs, readSourceToo, 'translated');
+            speakQueue(queue, index, runId, repeatEach, repeatIndex + 1, intervalMs, readSourceToo, 'translated', progressOffset, progressTotal);
             return;
           }
-          speakQueue(queue, index + 1, runId, repeatEach, 1, intervalMs, readSourceToo, 'translated');
+          speakQueue(queue, index + 1, runId, repeatEach, 1, intervalMs, readSourceToo, 'translated', progressOffset, progressTotal);
         }, intervalMs);
       };
       window.speechSynthesis.speak(utterance);
@@ -1766,6 +2212,11 @@ if (flashCardNextBtn) {
         deleteTabBtn.disabled = !canDeleteTab;
         deleteTabBtn.title = canDeleteTab ? '' : 'At least one tab is required';
       }
+      if (deleteAllTabsBtn) {
+        const hasTabs = Boolean(modeState && Array.isArray(modeState.tabs) && modeState.tabs.length > 0);
+        deleteAllTabsBtn.disabled = !hasTabs;
+        deleteAllTabsBtn.title = hasTabs ? '' : 'No tabs to delete';
+      }
       if (playAllBtn) {
         const activeTab = getActiveTab();
         const queue = buildPlayAllQueue(activeTab);
@@ -1783,12 +2234,16 @@ if (flashCardNextBtn) {
         const activeTab = getActiveTab();
         const queue = buildPlayAllQueue(activeTab);
         const hasPlayableItems = queue.length > 0;
-        playAllWidgetBtn.textContent = isPlayAllActive ? 'Stop' : 'Play All';
+        const modeLabel = getPlayAllModeLabel(playAllMainMode);
+        playAllWidgetBtn.textContent = isPlayAllActive ? 'Stop' : modeLabel;
+        playAllWidgetBtn.classList.toggle('is-playing', isPlayAllActive);
         playAllWidgetBtn.disabled = !hasPlayableItems && !isPlayAllActive;
         playAllWidgetBtn.title = isPlayAllActive
           ? 'Stop playing pronunciations'
-          : (hasPlayableItems ? 'Play all saved pronunciations' : 'No items to play');
+          : (hasPlayableItems ? `${modeLabel} for saved pronunciations` : 'No items to play');
       }
+      updateMoveToTriggerState();
+      updateCopyToTriggerState();
       updateFlashCardNavButtons();
     }
 
@@ -1909,11 +2364,57 @@ if (flashCardNextBtn) {
       lastSelectedSavedId = null;
       tabsMenuPanel.hidden = true;
       closeMoveToSubmenu();
+      closeCopyToSubmenu();
+      closeLoadDataSubmenu();
       tabsMenuBtn.setAttribute('aria-expanded', 'false');
       if (blocked.length > 0) {
         showError(`Moved ${movable.length}. Skipped ${blocked.length} duplicates.`);
       } else {
         showError(`Moved ${movable.length} item(s).`);
+      }
+      persistAppState();
+      renderTabs();
+      renderSavedItems();
+    }
+
+    function copySelectedItemsToTab(targetTabId) {
+      const modeState = getModeState();
+      if (!modeState) return;
+      const activeTab = getActiveTab();
+      const targetTab = modeState.tabs.find(tab => tab.id === targetTabId);
+      if (!activeTab || !targetTab) return;
+      if (activeTab.id === targetTabId) return;
+      const activeItems = getTabItems(activeTab);
+      const targetItems = getTabItems(targetTab);
+      const selectedInActiveTab = activeItems
+        .filter(item => selectedSavedIds.has(item.id))
+        .map(item => item.id);
+      if (selectedInActiveTab.length === 0) return;
+
+      const movingSet = new Set(selectedInActiveTab);
+      const { movable, blocked } = splitMovableItems(activeItems, targetItems, movingSet);
+      if (movable.length === 0) {
+        if (blocked.length > 0) {
+          showError('Already exists in destination tab.');
+        }
+        return;
+      }
+
+      const copied = movable.map(item => ({
+        ...item,
+        id: generateItemId(),
+        createdAt: new Date().toISOString()
+      }));
+      setTabItems(targetTab, [...copied, ...targetItems]);
+      tabsMenuPanel.hidden = true;
+      closeMoveToSubmenu();
+      closeCopyToSubmenu();
+      closeLoadDataSubmenu();
+      tabsMenuBtn.setAttribute('aria-expanded', 'false');
+      if (blocked.length > 0) {
+        showError(`Copied ${copied.length}. Skipped ${blocked.length} duplicates.`);
+      } else {
+        showError(`Copied ${copied.length} item(s).`);
       }
       persistAppState();
       renderTabs();
@@ -1938,10 +2439,6 @@ function renderMoveToMenuItems() {
   const activeItems = getTabItems(activeTab);
   const selectedCount = activeItems.filter(item => selectedSavedIds.has(item.id)).length;
   if (selectedCount === 0) {
-    const hint = document.createElement('div');
-    hint.className = 'tabs-menu-muted';
-    hint.textContent = 'Select items first';
-    moveToList.appendChild(hint);
     return;
   }
 
@@ -1955,6 +2452,71 @@ function renderMoveToMenuItems() {
   }
 }
 
+function renderCopyToMenuItems() {
+  if (!copyToList) return;
+  const modeState = getModeState();
+  copyToList.innerHTML = '';
+  const activeTab = getActiveTab();
+  if (!activeTab || !modeState) return;
+
+  const targets = modeState.tabs.filter(tab => tab.id !== activeTab.id);
+  if (targets.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'tabs-menu-muted';
+    empty.textContent = 'No other tabs';
+    copyToList.appendChild(empty);
+    return;
+  }
+
+  const activeItems = getTabItems(activeTab);
+  const selectedCount = activeItems.filter(item => selectedSavedIds.has(item.id)).length;
+  if (selectedCount === 0) {
+    return;
+  }
+
+  for (const tab of targets) {
+    const btn = document.createElement('button');
+    btn.className = 'tabs-menu-item';
+    btn.type = 'button';
+    btn.textContent = `${tab.name} (${getTabItems(tab).length})`;
+    btn.addEventListener('click', () => copySelectedItemsToTab(tab.id));
+    copyToList.appendChild(btn);
+  }
+}
+
+    function makeUniqueId(candidate, usedIds) {
+      let next = typeof candidate === 'string' && candidate.trim()
+        ? candidate.trim()
+        : generateItemId();
+      while (usedIds.has(next)) {
+        next = generateItemId();
+      }
+      usedIds.add(next);
+      return next;
+    }
+
+    function ensureUniqueIdsInTabs(tabs) {
+      const usedTabIds = new Set();
+      const usedItemIds = new Set();
+      for (const tab of tabs) {
+        if (!tab || typeof tab !== 'object') continue;
+        tab.id = makeUniqueId(tab.id, usedTabIds);
+        if (!tab.itemsByMode || typeof tab.itemsByMode !== 'object') {
+          tab.itemsByMode = { zh: [], ja: [], ko: [], ja_ko: [] };
+        }
+        for (const modeKey of MODE_KEYS) {
+          if (!Array.isArray(tab.itemsByMode[modeKey])) {
+            tab.itemsByMode[modeKey] = [];
+          }
+          for (const item of tab.itemsByMode[modeKey]) {
+            if (!item || typeof item !== 'object') continue;
+            item.id = makeUniqueId(item.id, usedItemIds);
+          }
+        }
+      }
+      return tabs;
+    }
+
     function getActiveTab() {
       const modeState = getModeState();
       if (!modeState) return null;
@@ -1966,6 +2528,7 @@ function renderMoveToMenuItems() {
       if (tabs.length === 0) {
         tabs.push(createTab('List 1'));
       }
+      ensureUniqueIdsInTabs(tabs);
       const resolvedActive = tabs.some(tab => tab.id === activeTabId) ? activeTabId : tabs[0].id;
       return { tabs, activeTabId: resolvedActive };
     }
@@ -2068,6 +2631,161 @@ function renderMoveToMenuItems() {
       return null;
     }
 
+    function collectImportedTabsForMode(importedState, mode = appMode) {
+      const modeKey = MODE_KEYS.includes(mode) ? mode : 'zh';
+      const modeState = importedState && importedState.modes && importedState.modes[modeKey];
+      if (!modeState || !Array.isArray(modeState.tabs)) return [];
+      const collected = [];
+      for (const tab of modeState.tabs) {
+        const tabName = String((tab && tab.name) || '').trim() || 'Imported';
+        const items = tab && tab.itemsByMode && Array.isArray(tab.itemsByMode[modeKey])
+          ? tab.itemsByMode[modeKey]
+          : [];
+        const normalizedItems = normalizeSavedItems(items);
+        const deduped = [];
+        const keys = new Set();
+        for (const item of normalizedItems) {
+          const nextItem = {
+            ...item,
+            id: generateItemId(),
+            createdAt: item.createdAt || new Date().toISOString()
+          };
+          const key = makeSavedItemKey(nextItem);
+          if (keys.has(key)) continue;
+          keys.add(key);
+          deduped.push(nextItem);
+        }
+        collected.push({
+          name: tabName,
+          items: deduped
+        });
+      }
+      return collected;
+    }
+
+    function confirmReplaceImport() {
+      return window.confirm('Are you sure to proceed? This will delete all tabs before import.');
+    }
+
+    function makeUniqueTabName(baseName = 'Imported') {
+      const modeState = getModeState();
+      if (!modeState || !Array.isArray(modeState.tabs)) return baseName;
+      const taken = new Set(modeState.tabs.map(tab => String(tab.name || '').trim().toLowerCase()));
+      if (!taken.has(baseName.toLowerCase())) return baseName;
+      let index = 2;
+      while (taken.has(`${baseName} ${index}`.toLowerCase())) {
+        index += 1;
+      }
+      return `${baseName} ${index}`;
+    }
+
+    function importTabsIntoNewTabs(importedTabs) {
+      const modeState = getModeState();
+      if (!modeState) return;
+      if (!Array.isArray(importedTabs) || importedTabs.length === 0) {
+        showError('Nothing to import.');
+        return;
+      }
+      let firstNewTabId = null;
+      let totalImported = 0;
+      for (const importedTab of importedTabs) {
+        const baseName = String((importedTab && importedTab.name) || '').trim() || 'Imported';
+        const tabName = makeUniqueTabName(baseName);
+        const newTab = createTab(tabName);
+        const items = Array.isArray(importedTab && importedTab.items) ? importedTab.items : [];
+        setTabItems(newTab, items);
+        modeState.tabs.push(newTab);
+        if (!firstNewTabId) {
+          firstNewTabId = newTab.id;
+        }
+        totalImported += items.length;
+      }
+      if (firstNewTabId) {
+        modeState.activeTabId = firstNewTabId;
+      }
+      selectedSavedIds.clear();
+      lastSelectedSavedId = null;
+      editingTabId = null;
+      persistAppState();
+      renderTabs();
+      renderSavedItems();
+      showError(`Added ${importedTabs.length} tab(s). Imported ${totalImported} item(s).`);
+    }
+
+    function replaceAllTabsWithImportedTabs(importedTabs) {
+      const modeState = getModeState();
+      if (!modeState) return;
+      modeState.tabs = [];
+      let totalImported = 0;
+      for (const importedTab of importedTabs) {
+        const baseName = String((importedTab && importedTab.name) || '').trim() || 'Imported';
+        const tabName = makeUniqueTabName(baseName);
+        const newTab = createTab(tabName);
+        const items = Array.isArray(importedTab && importedTab.items) ? importedTab.items : [];
+        setTabItems(newTab, items);
+        modeState.tabs.push(newTab);
+        totalImported += items.length;
+      }
+      if (modeState.tabs.length === 0) {
+        modeState.tabs.push(createTab('List 1'));
+      }
+      modeState.activeTabId = modeState.tabs[0].id;
+      selectedSavedIds.clear();
+      lastSelectedSavedId = null;
+      editingTabId = null;
+      persistAppState();
+      renderTabs();
+      renderSavedItems();
+      showError(`Replaced all tabs. Imported ${modeState.tabs.length} tab(s), ${totalImported} item(s).`);
+    }
+
+    function getBundledPresetData(path) {
+      const map = window.__PRESET_DATA__;
+      if (!map || typeof map !== 'object') return null;
+      if (!Object.prototype.hasOwnProperty.call(map, path)) return null;
+      return map[path];
+    }
+
+    async function loadPresetDataIntoActiveTab(path, label) {
+      try {
+        let parsed = getBundledPresetData(path);
+        if (!parsed) {
+          const res = await fetch(path, { cache: 'no-store' });
+          if (!res.ok) {
+            throw new Error('Failed to fetch preset data');
+          }
+          parsed = await res.json();
+        }
+        const imported = normalizeImportedState(parsed);
+        if (!imported) {
+          showError(`Invalid preset file: ${label}.`);
+          return;
+        }
+
+        const importedTabs = collectImportedTabsForMode(imported, appMode);
+        const importMode = await askImportMode();
+        if (importMode === 'cancel') {
+          showError('Load canceled.');
+          return;
+        }
+        if (importMode === 'newTab') {
+          if (importedTabs.length === 0) {
+            showError(`No ${appMode.toUpperCase()} tabs found in ${label}.`);
+            return;
+          }
+          importTabsIntoNewTabs(importedTabs);
+          return;
+        }
+        if (!confirmReplaceImport()) {
+          showError('Load canceled.');
+          return;
+        }
+        replaceAllTabsWithImportedTabs(importedTabs);
+      } catch {
+        showError(`Failed to load ${label}.`);
+      }
+    }
+
     function exportAppStateAsJson() {
       const payload = {
         app: 'chinese-word-helper',
@@ -2097,6 +2815,17 @@ function renderMoveToMenuItems() {
       } catch {
         return [];
       }
+    }
+
+    function createDefaultAppState() {
+      return {
+        modes: {
+          zh: createWorkspaceFromTabs([], null),
+          ja: createWorkspaceFromTabs([], null),
+          ko: createWorkspaceFromTabs([], null),
+          ja_ko: createWorkspaceFromTabs([], null)
+        }
+      };
     }
 
     function loadAppState() {
@@ -2244,6 +2973,13 @@ function handleSavedRowSelectionClick(itemId, event, items) {
     toggleSelection(itemId);
     return;
   }
+  if (selectedSavedIds.has(itemId) && selectedSavedIds.size === 1) {
+    selectedSavedIds.delete(itemId);
+    if (lastSelectedSavedId === itemId) {
+      lastSelectedSavedId = null;
+    }
+    return;
+  }
   setSingleSelection(itemId);
 }
 
@@ -2254,8 +2990,49 @@ function updateBatchDeleteState() {
     ? activeItems.some(item => selectedSavedIds.has(item.id))
     : false;
   batchDeleteBtn.disabled = !hasActiveSelection;
+  updateMoveToTriggerState();
+  updateCopyToTriggerState();
   if (!tabsMenuPanel.hidden) {
     renderMoveToMenuItems();
+    renderCopyToMenuItems();
+  }
+}
+
+function updateMoveToTriggerState() {
+  if (!moveToTriggerBtn) return;
+  const modeState = getModeState();
+  const activeTab = getActiveTab();
+  if (!modeState || !activeTab) {
+    moveToTriggerBtn.disabled = true;
+    closeMoveToSubmenu();
+    return;
+  }
+  const targets = modeState.tabs.filter(tab => tab.id !== activeTab.id);
+  const activeItems = getTabItems(activeTab);
+  const selectedCount = activeItems.filter(item => selectedSavedIds.has(item.id)).length;
+  const canMove = targets.length > 0 && selectedCount > 0;
+  moveToTriggerBtn.disabled = !canMove;
+  if (!canMove) {
+    closeMoveToSubmenu();
+  }
+}
+
+function updateCopyToTriggerState() {
+  if (!copyToTriggerBtn) return;
+  const modeState = getModeState();
+  const activeTab = getActiveTab();
+  if (!modeState || !activeTab) {
+    copyToTriggerBtn.disabled = true;
+    closeCopyToSubmenu();
+    return;
+  }
+  const targets = modeState.tabs.filter(tab => tab.id !== activeTab.id);
+  const activeItems = getTabItems(activeTab);
+  const selectedCount = activeItems.filter(item => selectedSavedIds.has(item.id)).length;
+  const canCopy = targets.length > 0 && selectedCount > 0;
+  copyToTriggerBtn.disabled = !canCopy;
+  if (!canCopy) {
+    closeCopyToSubmenu();
   }
 }
 
@@ -2408,8 +3185,13 @@ function renderSavedItems() {
       }
 
   for (const item of items) {
+    const isSelected = selectedSavedIds.has(item.id);
     const li = document.createElement('li');
-    li.className = `saved-item mode-${item.mode || 'zh'}${selectedSavedIds.has(item.id) ? ' is-selected' : ''}${nowPlayingSavedId === item.id ? ' is-playing' : ''}`;
+    li.className = `saved-item mode-${item.mode || 'zh'}${isSelected ? ' is-selected' : ''}${nowPlayingSavedId === item.id ? ' is-playing' : ''}`;
+    if (isSelected) {
+      const selectedCount = selectedSavedIds.size;
+      li.title = `${selectedCount} selected`;
+    }
     li.draggable = true;
     li.dataset.id = item.id;
     li.addEventListener('click', (event) => {
@@ -2537,6 +3319,7 @@ function renderSavedItems() {
   updateBatchDeleteState();
   if (!tabsMenuPanel.hidden) {
     renderMoveToMenuItems();
+    renderCopyToMenuItems();
   }
 }
 

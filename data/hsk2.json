@@ -1,0 +1,1600 @@
+{
+  "app": "chinese-word-helper",
+  "version": 2,
+  "exportedAt": "2026-02-25T15:45:43.891345Z",
+  "appState": {
+    "modes": {
+      "zh": {
+        "tabs": [
+          {
+            "id": "2c38d327-206f-4991-9317-6831601905e2",
+            "name": "HSK Level 2",
+            "itemsByMode": {
+              "zh": [
+                {
+                  "id": "4e5847e0-e63e-4f64-b0f6-1ea5f95ade7c",
+                  "mode": "zh",
+                  "source": "歓迎する",
+                  "target": "欢迎",
+                  "reading": "huānyíng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "bbdabf13-ae45-4b20-93c6-23b2391a6c23",
+                  "mode": "zh",
+                  "source": "あなた（敬語）",
+                  "target": "您",
+                  "reading": "nín",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "788aad7e-b5eb-4ba1-b3a8-f05b7a8f3606",
+                  "mode": "zh",
+                  "source": "みんな/皆さん",
+                  "target": "大家",
+                  "reading": "dàjiā",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "024206ea-d4ef-4a75-8d14-a6213c86906b",
+                  "mode": "zh",
+                  "source": "兄/お兄さん",
+                  "target": "哥哥",
+                  "reading": "gēge",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "44e1a423-38c8-47c8-a73c-e86260c7ca30",
+                  "mode": "zh",
+                  "source": "姉/お姉さん",
+                  "target": "姐姐",
+                  "reading": "jiějie",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "0253e9b7-7fed-4001-9a3a-3180493dc20d",
+                  "mode": "zh",
+                  "source": "弟",
+                  "target": "弟弟",
+                  "reading": "dìdi",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "b7e4ec96-713b-4936-86e7-6b9ea1661de9",
+                  "mode": "zh",
+                  "source": "妹",
+                  "target": "妹妹",
+                  "reading": "mèimei",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "d40119bc-1718-4bd1-9c1a-e1afa06c5c2f",
+                  "mode": "zh",
+                  "source": "子供",
+                  "target": "孩子",
+                  "reading": "háizi",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "05b12aa1-4dac-4a52-b4a7-d6d40b15abac",
+                  "mode": "zh",
+                  "source": "男",
+                  "target": "男人",
+                  "reading": "nánrén",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "fa1cbf38-79b5-4f12-84ac-e8845a9fcaeb",
+                  "mode": "zh",
+                  "source": "女",
+                  "target": "女人",
+                  "reading": "nǚrén",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "78743023-c923-40ed-913d-84299665f61c",
+                  "mode": "zh",
+                  "source": "夫",
+                  "target": "丈夫",
+                  "reading": "zhàngfū",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "8053e0c6-5e7f-4fec-ac09-547fd6edc06c",
+                  "mode": "zh",
+                  "source": "妻",
+                  "target": "妻子",
+                  "reading": "qīzi",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "f5f2b6c2-fa12-45b6-8f07-616e0c73bde1",
+                  "mode": "zh",
+                  "source": "店員",
+                  "target": "服务员",
+                  "reading": "fúwùyuán",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "13e9acec-5729-4879-8c2d-f5a0338c6bd8",
+                  "mode": "zh",
+                  "source": "百",
+                  "target": "百",
+                  "reading": "bǎi",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "bd01070f-c199-480f-9e52-235c8cb75340",
+                  "mode": "zh",
+                  "source": "千",
+                  "target": "千",
+                  "reading": "qiān",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "d9b113bc-fc54-4ebc-96c6-1859a1b154df",
+                  "mode": "zh",
+                  "source": "二つ",
+                  "target": "两",
+                  "reading": "liǎng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "64bcae9b-87b1-4392-951c-0f0219a18d71",
+                  "mode": "zh",
+                  "source": "一番初め/最初",
+                  "target": "第一",
+                  "reading": "dì yī",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "d50e8418-557e-43df-b0ff-aad53d136789",
+                  "mode": "zh",
+                  "source": "(順序を示す)量詞 番号",
+                  "target": "号",
+                  "reading": "hào",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "b293d855-f57c-4f21-8da8-01d34cec0d5c",
+                  "mode": "zh",
+                  "source": "（回数を数える）量詞 回",
+                  "target": "次",
+                  "reading": "cì",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "2525a000-0b16-4afe-80a9-653c6d21d04a",
+                  "mode": "zh",
+                  "source": "（上着類の数を数える）量詞",
+                  "target": "件",
+                  "reading": "jiàn",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "799b41fa-8845-4aac-b2a3-82277513fe66",
+                  "mode": "zh",
+                  "source": "（薄いものを数える量詞）枚",
+                  "target": "张",
+                  "reading": "zhāng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "f7d15275-0d0c-4988-8e93-5e2aead7b5d0",
+                  "mode": "zh",
+                  "source": "/キログラム",
+                  "target": "公斤",
+                  "reading": "gōngjīn kg",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "282dbdd3-dc10-4680-9adb-c28a345676aa",
+                  "mode": "zh",
+                  "source": "（中国のお金の単位）元",
+                  "target": "元",
+                  "reading": "yuán",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "97f64c9b-69a3-4153-b161-f591292dff40",
+                  "mode": "zh",
+                  "source": "最も",
+                  "target": "最",
+                  "reading": "zuì",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "76e14fa1-f892-4683-857f-19609f677851",
+                  "mode": "zh",
+                  "source": "時間",
+                  "target": "时间",
+                  "reading": "shíjiān",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "e26194a0-3233-423d-9c4b-1d8a6ff458dd",
+                  "mode": "zh",
+                  "source": "～時間(時間の単位)",
+                  "target": "小时",
+                  "reading": "xiǎoshí",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "8f64cbe0-dce3-4f16-af8f-3051968b0d37",
+                  "mode": "zh",
+                  "source": "夜",
+                  "target": "晚上",
+                  "reading": "wǎnshàng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "2a100505-f06b-4452-b0c0-bd1b20726dd3",
+                  "mode": "zh",
+                  "source": "朝",
+                  "target": "早上",
+                  "reading": "zǎoshang",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "4586ecfb-2cbf-4dd4-870d-df76a5de5d5a",
+                  "mode": "zh",
+                  "source": "昨年",
+                  "target": "去年",
+                  "reading": "qùnián",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "35e4357b-9551-45fa-9986-eb1b689570c9",
+                  "mode": "zh",
+                  "source": "誕生日",
+                  "target": "生日",
+                  "reading": "shēngrì",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "decb4e11-657e-4d2f-a58f-241f84bf867e",
+                  "mode": "zh",
+                  "source": "昨日",
+                  "target": "昨天",
+                  "reading": "zuótiān",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "ebd84b90-5648-4357-9bc7-011498cc0849",
+                  "mode": "zh",
+                  "source": "再び",
+                  "target": "再",
+                  "reading": "zài",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "968da0d8-8a79-470f-943c-93f3263ce62c",
+                  "mode": "zh",
+                  "source": "もう/既に",
+                  "target": "已经",
+                  "reading": "yǐjīng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "857bc4e2-c3a7-4d73-bdc4-330e3bca7b00",
+                  "mode": "zh",
+                  "source": "一緒に",
+                  "target": "一起",
+                  "reading": "yīqǐ",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "c9561836-b705-4336-97ab-63650f8bfff5",
+                  "mode": "zh",
+                  "source": "～している",
+                  "target": "正在",
+                  "reading": "zhèng zài",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "6cb68a2d-be05-48fb-bdf0-8bcd90e3b0f3",
+                  "mode": "zh",
+                  "source": "アスペクト助詞",
+                  "target": "着",
+                  "reading": "zhe",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "40dc1d99-2236-4ae0-b6e4-a7f553cd7acb",
+                  "mode": "zh",
+                  "source": "白い",
+                  "target": "白",
+                  "reading": "bái",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "c758922a-5f05-410e-af26-62167ea07c41",
+                  "mode": "zh",
+                  "source": "黒",
+                  "target": "黑",
+                  "reading": "hēi",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "5a66c060-85c7-4d46-93c1-a8ce124a4caf",
+                  "mode": "zh",
+                  "source": "赤",
+                  "target": "红",
+                  "reading": "hóng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "990d6d37-4b14-4226-80fb-8f8339b48a00",
+                  "mode": "zh",
+                  "source": "色",
+                  "target": "颜色",
+                  "reading": "yánsè",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "5deea67f-fff9-4ffb-a636-4d68979db3f5",
+                  "mode": "zh",
+                  "source": "晴れる",
+                  "target": "晴",
+                  "reading": "qíng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "7abf25b7-7f6c-49e2-a952-6a9643fb4ac8",
+                  "mode": "zh",
+                  "source": "曇り",
+                  "target": "阴",
+                  "reading": "yīn",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "c1351708-dcb3-4a38-a1f1-61a746ff8470",
+                  "mode": "zh",
+                  "source": "雪",
+                  "target": "雪",
+                  "reading": "xuě",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "ef06f10e-e281-441b-b45b-f4dd1fbffc83",
+                  "mode": "zh",
+                  "source": "部屋",
+                  "target": "房间",
+                  "reading": "fángjiān",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "a005e871-b465-446d-9de1-4b845b325950",
+                  "mode": "zh",
+                  "source": "扉",
+                  "target": "门",
+                  "reading": "mén",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "9b6b6fee-c6e7-4315-9573-02ad6f591b79",
+                  "mode": "zh",
+                  "source": "会社",
+                  "target": "公司",
+                  "reading": "gōngsī",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "c5a1ad43-8a49-4014-aa16-a516112ff8e2",
+                  "mode": "zh",
+                  "source": "空港",
+                  "target": "机场",
+                  "reading": "jīchǎng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "8e8a4de2-4501-477f-a3fd-76718d4a65c5",
+                  "mode": "zh",
+                  "source": "道路",
+                  "target": "路",
+                  "reading": "lù",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "7709525d-31e1-4a38-87f2-f33d2b3c344e",
+                  "mode": "zh",
+                  "source": "隣",
+                  "target": "旁边",
+                  "reading": "pángbiān",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "9e5ea5e8-def9-4d2b-a6b5-e2b7c2c30838",
+                  "mode": "zh",
+                  "source": "左側",
+                  "target": "左边",
+                  "reading": "zuǒbiān",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "37e91959-e281-4f61-b793-21c665d31a1f",
+                  "mode": "zh",
+                  "source": "右側",
+                  "target": "右边",
+                  "reading": "yòubiān",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "779dc456-2cd1-444b-9aff-52300e9b59de",
+                  "mode": "zh",
+                  "source": "外",
+                  "target": "外",
+                  "reading": "wài",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "e8aa7978-8612-42ac-887f-502b16eac6be",
+                  "mode": "zh",
+                  "source": "離れる",
+                  "target": "离",
+                  "reading": "lí",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "97e3be1f-0b2a-44b2-a443-c6984732bdbd",
+                  "mode": "zh",
+                  "source": "近い",
+                  "target": "近",
+                  "reading": "jìn",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "0db7ed73-92bf-4e7d-b254-7dbda8cf05b3",
+                  "mode": "zh",
+                  "source": "遠い",
+                  "target": "远",
+                  "reading": "yuǎn",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "ad94cf3c-62d1-4b3b-970b-d8b07730daa3",
+                  "mode": "zh",
+                  "source": "バス",
+                  "target": "公共汽车",
+                  "reading": "gōnggòng qìchē",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "4f68241b-8cc8-4a0d-994c-0dfa486062d5",
+                  "mode": "zh",
+                  "source": "船",
+                  "target": "船",
+                  "reading": "chuán",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "80292bce-b605-482d-a0d7-0f1b7aaf41a2",
+                  "mode": "zh",
+                  "source": "自転車",
+                  "target": "自行车",
+                  "reading": "zìxíngchē",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "b0e14c26-6a12-48b3-99be-8a55612e5c2e",
+                  "mode": "zh",
+                  "source": "チケット",
+                  "target": "票",
+                  "reading": "piào",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "f2de8df0-34ed-49c2-9fc2-4ac36491188d",
+                  "mode": "zh",
+                  "source": "旅行",
+                  "target": "旅游",
+                  "reading": "lǚyóu",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "44b1458e-d9dc-4884-ab37-9be573f44b3d",
+                  "mode": "zh",
+                  "source": "美味しい",
+                  "target": "好吃",
+                  "reading": "hào chī",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "4bfdeab5-1250-4bd7-a54a-44a5cb0f561a",
+                  "mode": "zh",
+                  "source": "卵",
+                  "target": "鸡蛋",
+                  "reading": "jīdàn",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "15bbbb33-e693-42b2-9ac7-e7a4571789fc",
+                  "mode": "zh",
+                  "source": "牛乳",
+                  "target": "牛奶",
+                  "reading": "niúnǎi",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "c89bc5ff-9450-4842-aa3d-cff77b451662",
+                  "mode": "zh",
+                  "source": "コーヒー",
+                  "target": "咖啡",
+                  "reading": "kāfēi",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "59b6263f-e89e-4430-bea0-571f724555f7",
+                  "mode": "zh",
+                  "source": "スイカ",
+                  "target": "西瓜",
+                  "reading": "xī guā",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "34675825-b24b-489d-b5d2-c7d655740ea8",
+                  "mode": "zh",
+                  "source": "羊肉",
+                  "target": "羊肉",
+                  "reading": "yángròu",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "83a70817-4d55-4fa7-bc80-641f6000596a",
+                  "mode": "zh",
+                  "source": "魚",
+                  "target": "鱼",
+                  "reading": "yú",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "abc58076-4d16-449d-904b-aba483d92585",
+                  "mode": "zh",
+                  "source": "教室",
+                  "target": "教室",
+                  "reading": "jiàoshì",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "c438a9a0-858c-4faf-8bd4-19d5257403eb",
+                  "mode": "zh",
+                  "source": "授業",
+                  "target": "课",
+                  "reading": "kè",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "f7ef77f4-843a-4689-98bb-a11492c1b3e0",
+                  "mode": "zh",
+                  "source": "試験",
+                  "target": "考试",
+                  "reading": "kǎoshì",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "4c010557-9992-41c6-843c-e1c29a3c97ce",
+                  "mode": "zh",
+                  "source": "始める",
+                  "target": "开始",
+                  "reading": "kāishǐ",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "0973c2e4-bb4a-4749-8730-2e80fbd54f0f",
+                  "mode": "zh",
+                  "source": "出勤する",
+                  "target": "上班",
+                  "reading": "shàngbān",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "ef8af423-d5c9-438f-9cd0-10d5c8451e22",
+                  "mode": "zh",
+                  "source": "助ける",
+                  "target": "帮助",
+                  "reading": "bāngzhù",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "b82cae5c-439a-47fc-a1a8-74f320dd1bda",
+                  "mode": "zh",
+                  "source": "準備をする",
+                  "target": "准备",
+                  "reading": "zhǔnbèi",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "de983721-5102-475c-85e3-092f6528fe53",
+                  "mode": "zh",
+                  "source": "歌を歌う",
+                  "target": "唱歌",
+                  "reading": "chànggē",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "d68aa26a-bcbe-4cea-ae58-f08d12718e3c",
+                  "mode": "zh",
+                  "source": "バスケットボールをする",
+                  "target": "打篮球",
+                  "reading": "dǎ lánqiú",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "5bb00631-52e5-4f98-a590-1e38c87408f6",
+                  "mode": "zh",
+                  "source": "サッカーをする",
+                  "target": "踢足球",
+                  "reading": "tī zúqiú",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "bd120e93-ce1d-4360-b6fd-fbc0e0f4cc04",
+                  "mode": "zh",
+                  "source": "ダンス",
+                  "target": "跳舞",
+                  "reading": "tiàowǔ",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "d900ce64-42a0-4d0e-8cd4-8d82a5161a89",
+                  "mode": "zh",
+                  "source": "走る",
+                  "target": "跑步",
+                  "reading": "pǎobù",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "b0e55e0c-d22d-42c4-8fec-ee6f2d4c477c",
+                  "mode": "zh",
+                  "source": "泳ぐ",
+                  "target": "游泳",
+                  "reading": "yóuyǒng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "5bc88962-9e5c-4a96-9cd0-e5acbfdb892b",
+                  "mode": "zh",
+                  "source": "運動",
+                  "target": "运动",
+                  "reading": "yùndòng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "24148674-da61-43ec-952b-9288003408c9",
+                  "mode": "zh",
+                  "source": "遊ぶ",
+                  "target": "玩",
+                  "reading": "wán",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "fca1c779-39bf-4599-b002-2807f177e927",
+                  "mode": "zh",
+                  "source": "休憩/休む",
+                  "target": "休息",
+                  "reading": "xiūxí",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "364c2335-99f1-4ef0-8dc8-373720b5a7fa",
+                  "mode": "zh",
+                  "source": "笑う",
+                  "target": "笑",
+                  "reading": "xiào",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "77ab0a25-bb6d-4248-b49a-fc6e24987cf4",
+                  "mode": "zh",
+                  "source": "答える",
+                  "target": "回答",
+                  "reading": "huídá",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "938f812c-7a21-418a-b7c1-ee9f50c49c81",
+                  "mode": "zh",
+                  "source": "伝える",
+                  "target": "告诉",
+                  "reading": "gàosù",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "a2d2c896-1f8d-4c43-b006-ebb38115b9b0",
+                  "mode": "zh",
+                  "source": "尋ねる/質問",
+                  "target": "问",
+                  "reading": "wèn",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "2602829f-df7c-4721-9f6c-b184eb0da6aa",
+                  "mode": "zh",
+                  "source": "問題",
+                  "target": "问题",
+                  "reading": "wèntí",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "6bc56923-cb4d-4062-99c1-9d236349de18",
+                  "mode": "zh",
+                  "source": "問題",
+                  "target": "题",
+                  "reading": "tí",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "f791b77d-ceae-4f6b-bed1-382fb1b7ca27",
+                  "mode": "zh",
+                  "source": "分かる",
+                  "target": "懂",
+                  "reading": "dǒng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "ccbe007a-76f9-4fe4-b335-b3c88a4ff150",
+                  "mode": "zh",
+                  "source": "知っている",
+                  "target": "知道",
+                  "reading": "zhīdào",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "ca515527-185f-49ed-870a-034e1696575c",
+                  "mode": "zh",
+                  "source": "望む",
+                  "target": "希望",
+                  "reading": "xīwàng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "00242b78-aabb-4a84-ad2e-220c12555a29",
+                  "mode": "zh",
+                  "source": "思う/感じる",
+                  "target": "觉得",
+                  "reading": "juéde",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "4f449f7f-1c12-4f49-9b01-15c13098a643",
+                  "mode": "zh",
+                  "source": "かもしれない",
+                  "target": "可能",
+                  "reading": "kěnéng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "bf56ce66-0837-4037-9d5c-58ccae4efaeb",
+                  "mode": "zh",
+                  "source": "できる",
+                  "target": "可以",
+                  "reading": "kěyǐ",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "7e5890ac-e6cd-4997-928c-2c175c889591",
+                  "mode": "zh",
+                  "source": "なぜなら",
+                  "target": "因为",
+                  "reading": "yīnwèi",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "f24abca1-8f5e-4b99-9435-3459470ebfad",
+                  "mode": "zh",
+                  "source": "だから",
+                  "target": "所以",
+                  "reading": "suǒyǐ",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "2578bdc5-fed2-43af-90b0-6e7d0aeb512c",
+                  "mode": "zh",
+                  "source": "なぜ/どうして",
+                  "target": "为什么",
+                  "reading": "wèishéme",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "9220f5cd-902d-48c5-9c41-1d75d96da640",
+                  "mode": "zh",
+                  "source": "意味",
+                  "target": "意思",
+                  "reading": "yìsi",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "f981e377-3f8c-4a4d-832b-a494bedfe487",
+                  "mode": "zh",
+                  "source": "紹介する",
+                  "target": "介绍",
+                  "reading": "jièshào",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "9bd31cb3-3c5d-40cf-a451-b99c031d68eb",
+                  "mode": "zh",
+                  "source": "新聞",
+                  "target": "报纸",
+                  "reading": "bàozhǐ",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "0fd7564b-6fae-44e2-9443-04a6eb1542ff",
+                  "mode": "zh",
+                  "source": "携帯電話",
+                  "target": "手机",
+                  "reading": "shǒujī",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "a08c213b-353b-4fc6-9ac4-82fa141e9168",
+                  "mode": "zh",
+                  "source": "腕時計",
+                  "target": "手表",
+                  "reading": "shǒubiǎo",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "cd55a6db-dc87-4cc8-a8cf-cbfcc15bb744",
+                  "mode": "zh",
+                  "source": "でしょう/ましょう",
+                  "target": "吧",
+                  "reading": "ba",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "0d96a9ea-45cd-4d7c-b18f-1f61a0da394e",
+                  "mode": "zh",
+                  "source": "しかし/でも",
+                  "target": "但是",
+                  "reading": "dànshì",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "44cb3817-d6ff-407a-8bcd-a7a8bc5136a4",
+                  "mode": "zh",
+                  "source": "比べて",
+                  "target": "比",
+                  "reading": "bǐ",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "6fa23551-0f6d-4b44-8582-bb66ad2a2e50",
+                  "mode": "zh",
+                  "source": "～しないでください",
+                  "target": "别",
+                  "reading": "bié",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "10092cdb-fa23-4ca2-aefe-2f636d1aeeff",
+                  "mode": "zh",
+                  "source": "出る",
+                  "target": "出",
+                  "reading": "chū",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "816925f2-5310-4497-af01-a8ad856a9d5e",
+                  "mode": "zh",
+                  "source": "着る",
+                  "target": "穿",
+                  "reading": "chuān",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "ecbf3025-242c-4a84-8613-6c50a6d99a23",
+                  "mode": "zh",
+                  "source": "～から",
+                  "target": "从",
+                  "reading": "cóng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "b06e135a-de88-4180-942b-8db7adfcbb42",
+                  "mode": "zh",
+                  "source": "間違う",
+                  "target": "错",
+                  "reading": "cuò",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "ff1fff3d-1b9a-4d0c-9b17-0b72ba46402c",
+                  "mode": "zh",
+                  "source": "～へ",
+                  "target": "到",
+                  "reading": "dào",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "40ec1ef4-2654-409d-91a2-466272399bcb",
+                  "mode": "zh",
+                  "source": "構造助詞",
+                  "target": "得",
+                  "reading": "de",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "81d0aea0-371a-426f-a1ce-63e5ca9c5f03",
+                  "mode": "zh",
+                  "source": "待つ",
+                  "target": "等",
+                  "reading": "děng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "17a46238-c4a3-4e6e-b416-c16f1760b005",
+                  "mode": "zh",
+                  "source": "与える/あげる",
+                  "target": "给",
+                  "reading": "gěi",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "7ad7c1b3-0c30-46af-b1c5-341bbd455f11",
+                  "mode": "zh",
+                  "source": "～したことがある",
+                  "target": "过",
+                  "reading": "guò",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "ea14aa37-6e7c-479c-a1ff-b8c31b7feac4",
+                  "mode": "zh",
+                  "source": "さらに",
+                  "target": "还",
+                  "reading": "hái",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "4703dcd9-da1a-4b46-b664-6db748af5f6d",
+                  "mode": "zh",
+                  "source": "すぐに",
+                  "target": "就",
+                  "reading": "jiù",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "865da89a-2f4d-473c-b6e1-5be1808c8c35",
+                  "mode": "zh",
+                  "source": "させる",
+                  "target": "让",
+                  "reading": "ràng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "7f04e136-df3b-4ef8-b214-9f849c1dadfb",
+                  "mode": "zh",
+                  "source": "送る/届ける",
+                  "target": "送",
+                  "reading": "sòng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "bf934bf0-f07d-4792-9deb-f9e11344c09a",
+                  "mode": "zh",
+                  "source": "それ/あれ",
+                  "target": "它",
+                  "reading": "tā",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "6e75bd58-2187-40d4-bafb-8fe57cd33b22",
+                  "mode": "zh",
+                  "source": "完成する/終わる",
+                  "target": "完",
+                  "reading": "wán",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "f734f39e-9f93-49db-a755-29b98e16c07d",
+                  "mode": "zh",
+                  "source": "洗う",
+                  "target": "洗",
+                  "reading": "xǐ",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "6271182c-7d85-4b2f-8d09-0a69f5bc2009",
+                  "mode": "zh",
+                  "source": "へ/向かって",
+                  "target": "向",
+                  "reading": "xiàng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "b2b0bcbe-734b-4c4e-acdc-2a20f5452d20",
+                  "mode": "zh",
+                  "source": "姓/名字",
+                  "target": "姓",
+                  "reading": "xìng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "83ad081d-2db2-48c6-a09e-41d03bc3fe77",
+                  "mode": "zh",
+                  "source": "薬",
+                  "target": "药",
+                  "reading": "yào",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "6365840d-7f0f-4883-b6be-ab8a0f8e47ee",
+                  "mode": "zh",
+                  "source": "要求する",
+                  "target": "要",
+                  "reading": "yào",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "bac4630f-9336-4f16-aea9-a585dcd96602",
+                  "mode": "zh",
+                  "source": "～も/また",
+                  "target": "也",
+                  "reading": "yě",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "a0aa8cd7-697d-48ba-987a-cea4dd4adde9",
+                  "mode": "zh",
+                  "source": "探す",
+                  "target": "找",
+                  "reading": "zhǎo",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "b1a3b3ce-0161-4617-badc-05f7a2033e18",
+                  "mode": "zh",
+                  "source": "歩く",
+                  "target": "走",
+                  "reading": "zǒu",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "6c69a4fa-9f23-4159-916c-72d037808dc8",
+                  "mode": "zh",
+                  "source": "する",
+                  "target": "做",
+                  "reading": "zuò",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "0e631814-cce4-42ed-b4db-80ad2c4823c2",
+                  "mode": "zh",
+                  "source": "座る",
+                  "target": "坐",
+                  "reading": "zuò",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "88f6005d-b45e-4224-a5a5-625a468863d8",
+                  "mode": "zh",
+                  "source": "体",
+                  "target": "身体",
+                  "reading": "shēntǐ",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "7e5f6465-abcb-474b-b963-eb2a92d263e2",
+                  "mode": "zh",
+                  "source": "病気になる",
+                  "target": "生病",
+                  "reading": "shēngbìng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "5aedae7e-0190-45eb-8db9-23110a08f98f",
+                  "mode": "zh",
+                  "source": "事",
+                  "target": "事情",
+                  "reading": "shìqíng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "d5dcf65e-379c-4490-b743-972ceae10eed",
+                  "mode": "zh",
+                  "source": "高い",
+                  "target": "高",
+                  "reading": "gāo",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "5f0f29b6-71f3-4609-93f5-f668e1b8445d",
+                  "mode": "zh",
+                  "source": "値段が高い",
+                  "target": "贵",
+                  "reading": "guì",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "c33794b5-c319-4f28-a85d-795351e84809",
+                  "mode": "zh",
+                  "source": "値段が安い",
+                  "target": "便宜",
+                  "reading": "piányí",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "81c208eb-ddc4-4c3a-8971-0001680dd009",
+                  "mode": "zh",
+                  "source": "速い",
+                  "target": "快",
+                  "reading": "kuài",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "e7ab1cc4-c6ac-457a-b9c2-51cd6fe85fef",
+                  "mode": "zh",
+                  "source": "遅い",
+                  "target": "慢",
+                  "reading": "màn",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "95f1b10d-ab61-4ab3-b307-239ea35849c3",
+                  "mode": "zh",
+                  "source": "忙しい",
+                  "target": "忙",
+                  "reading": "máng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "d531e838-4c36-4bbe-8b23-a2edbe2ec6b3",
+                  "mode": "zh",
+                  "source": "幸せ/楽しい",
+                  "target": "快乐",
+                  "reading": "kuàilè",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "796fa7cf-66ed-4f8f-9a62-1e1b0e084df2",
+                  "mode": "zh",
+                  "source": "疲れる",
+                  "target": "累",
+                  "reading": "lèi",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "7da5c8d7-653c-4e39-91f8-76c3ebd30fef",
+                  "mode": "zh",
+                  "source": "非常に/とても",
+                  "target": "非常",
+                  "reading": "fēicháng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "f091a321-12be-4cb8-aa02-772673c01379",
+                  "mode": "zh",
+                  "source": "正しい/正解",
+                  "target": "对",
+                  "reading": "duì",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "724e9706-2ec3-4eef-b17d-85e0cf2aa5cd",
+                  "mode": "zh",
+                  "source": "新しい",
+                  "target": "新",
+                  "reading": "xīn",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "5afde533-d7cc-442f-958f-83dbbeb592ca",
+                  "mode": "zh",
+                  "source": "それぞれ/各々",
+                  "target": "每",
+                  "reading": "měi",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "103c7744-4906-4192-bb6c-e8523feb2369",
+                  "mode": "zh",
+                  "source": "長い",
+                  "target": "长",
+                  "reading": "cháng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "9c3977c2-88e9-4876-b33b-a45464bd1eeb",
+                  "mode": "zh",
+                  "source": "入る",
+                  "target": "进",
+                  "reading": "jìn",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "76bd42e2-4d35-446a-8f8f-01e0d9bc07e0",
+                  "mode": "zh",
+                  "source": "売る",
+                  "target": "卖",
+                  "reading": "mài",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "bf31503d-1d93-4446-a671-ae0c80450919",
+                  "mode": "zh",
+                  "source": "起きる",
+                  "target": "起床",
+                  "reading": "qǐchuáng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "c35f5a10-f7c6-4516-870f-dc39d103b4a2",
+                  "mode": "zh",
+                  "source": "目",
+                  "target": "眼睛",
+                  "reading": "yǎnjīng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                },
+                {
+                  "id": "350f41ce-4e63-4858-9098-25e1b0771f38",
+                  "mode": "zh",
+                  "source": "本当に",
+                  "target": "真",
+                  "reading": "zhēn",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-02-25T15:45:26.532481Z"
+                }
+              ],
+              "ja": [],
+              "ko": [],
+              "ja_ko": []
+            }
+          }
+        ],
+        "activeTabId": "2c38d327-206f-4991-9317-6831601905e2"
+      },
+      "ja": {
+        "tabs": [
+          {
+            "id": "4c7f488e-7337-40b9-ab22-618ccd75dc5e",
+            "name": "HSK-2 (Context)",
+            "itemsByMode": {
+              "zh": [],
+              "ja": [],
+              "ko": [],
+              "ja_ko": []
+            }
+          }
+        ],
+        "activeTabId": "4c7f488e-7337-40b9-ab22-618ccd75dc5e"
+      },
+      "ko": {
+        "tabs": [
+          {
+            "id": "da98d777-2a85-4d3d-b5dc-96265136e0d5",
+            "name": "HSK-2 (Context)",
+            "itemsByMode": {
+              "zh": [],
+              "ja": [],
+              "ko": [],
+              "ja_ko": []
+            }
+          }
+        ],
+        "activeTabId": "da98d777-2a85-4d3d-b5dc-96265136e0d5"
+      },
+      "ja_ko": {
+        "tabs": [
+          {
+            "id": "e1ef74d5-2b18-4afa-9e16-698aa4211cb6",
+            "name": "HSK-2 (Context)",
+            "itemsByMode": {
+              "zh": [],
+              "ja": [],
+              "ko": [],
+              "ja_ko": []
+            }
+          }
+        ],
+        "activeTabId": "e1ef74d5-2b18-4afa-9e16-698aa4211cb6"
+      }
+    }
+  }
+}
