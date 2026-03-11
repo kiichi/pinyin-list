@@ -29,6 +29,36 @@
           <option value="ja_ko">Korean / English -> Japanese</option>
         </select>
       </div>
+      <div class="tabs-menu-wrap top-right-menu">
+        <button id="tabsMenuBtn" class="tabs-menu-btn" aria-label="Menu" title="Menu">☰</button>
+        <div id="tabsMenuPanel" class="tabs-menu-panel" hidden>
+          <div class="tabs-menu-mobile-shell">
+            <div class="tabs-menu-mobile-head">
+              <span>Menu</span>
+              <button id="tabsMenuCloseBtn" class="tabs-menu-mobile-close" type="button" aria-label="Close menu">✕</button>
+            </div>
+            <button id="controllerToggleBtn" class="tabs-menu-item" type="button" aria-expanded="true" aria-label="Collapse controller">Hide Controller</button>
+            <div class="tabs-menu-sep"></div>
+            <button id="exportBtn" class="tabs-menu-item" type="button">Export Data</button>
+            <button id="importBtn" class="tabs-menu-item" type="button">Import Data</button>
+            <div class="tabs-submenu-wrap">
+              <button id="loadDataTriggerBtn" class="tabs-menu-item tabs-submenu-trigger" type="button" aria-haspopup="true" aria-expanded="false">
+                <span>Load Data</span>
+                <span class="tabs-submenu-arrow" aria-hidden="true">▸</span>
+              </button>
+              <div id="loadDataSubmenu" class="tabs-submenu-panel" hidden>
+                <button id="loadHsk1Btn" class="tabs-menu-item" type="button">HSK Level 1</button>
+                <button id="loadHsk2Btn" class="tabs-menu-item" type="button">HSK Level 2</button>
+                <button id="loadHsk12Btn" class="tabs-menu-item" type="button">HSK Level 1-2</button>
+                <button id="loadHsk1SentencesBtn" class="tabs-menu-item" type="button">HSK 1 Sentences</button>
+              </div>
+            </div>
+            <div class="tabs-menu-sep"></div>
+            <button id="deleteAllTabsBtn" class="tabs-menu-item danger" type="button">Delete All Tabs</button>
+            <button id="resetEverythingBtn" class="tabs-menu-item danger" type="button">Reset Everything</button>
+          </div>
+        </div>
+      </div>
     </header>
 
     <section class="lookup-row">
@@ -59,9 +89,10 @@
       </div>
     </section>
 
-    <div id="errorBox" class="error"></div>
-
     <section class="saved">
+      <div class="status-bar">
+        <div id="errorBox" class="error"></div>
+      </div>
       <div id="playAllProgress" class="playall-progress">
         <div class="playall-progress-head">
           <div class="playall-progress-left">
@@ -75,8 +106,6 @@
               </div>
             </div>
             <button id="flashCardToggleBtn" class="secondary playall-toggle-btn" type="button" aria-pressed="false">Flash Card Off</button>
-            <button id="flashCardPrevBtn" class="secondary playall-toggle-btn" type="button">Prev</button>
-            <button id="flashCardNextBtn" class="secondary playall-toggle-btn" type="button">Next</button>
             <label class="playall-repeat-label" for="playAllRepeatSelect">Repeat</label>
             <select id="playAllRepeatSelect" class="playall-repeat-select" aria-label="Repeat each word">
               <option value="1">1x</option>
@@ -96,6 +125,7 @@
           </div>
           <div class="playall-progress-right">
             <span id="playAllProgressText" class="playall-progress-text">0 / 0</span>
+            <button id="controllerCloseBtn" class="secondary controller-close-btn" type="button" aria-label="Hide controller" title="Hide controller">✕</button>
           </div>
         </div>
         <div class="playall-progress-track" role="progressbar" aria-label="Play all progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
@@ -104,50 +134,6 @@
       </div>
       <div class="tabs-bar">
         <div id="tabsList" class="tabs-list"></div>
-        <div class="tabs-menu-wrap">
-          <button id="controllerToggleBtn" class="secondary controller-toggle-btn" type="button" aria-expanded="true" aria-label="Collapse controller">▴</button>
-          <button id="tabsMenuBtn" class="tabs-menu-btn" aria-label="More actions" title="More actions">⋯</button>
-          <div id="tabsMenuPanel" class="tabs-menu-panel" hidden>
-            <div class="tabs-submenu-wrap">
-              <button id="moveToTriggerBtn" class="tabs-menu-item tabs-submenu-trigger" type="button" aria-haspopup="true" aria-expanded="false">
-                <span>Move To</span>
-                <span class="tabs-submenu-arrow" aria-hidden="true">▸</span>
-              </button>
-              <div id="moveToSubmenu" class="tabs-submenu-panel" hidden>
-                <div id="moveToList" class="tabs-move-list"></div>
-              </div>
-            </div>
-            <div class="tabs-submenu-wrap">
-              <button id="copyToTriggerBtn" class="tabs-menu-item tabs-submenu-trigger" type="button" aria-haspopup="true" aria-expanded="false">
-                <span>Copy To</span>
-                <span class="tabs-submenu-arrow" aria-hidden="true">▸</span>
-              </button>
-              <div id="copyToSubmenu" class="tabs-submenu-panel" hidden>
-                <div id="copyToList" class="tabs-move-list"></div>
-              </div>
-            </div>
-            <div class="tabs-menu-sep"></div>
-            <button id="batchDeleteBtn" class="tabs-menu-item danger" type="button" disabled>Delete Selected Items</button>
-            <button id="clearBtn" class="tabs-menu-item danger" type="button">Clear All Items</button>
-            <button id="deleteTabBtn" class="tabs-menu-item danger" type="button">Delete This Tab</button>
-            <button id="deleteAllTabsBtn" class="tabs-menu-item danger" type="button">Delete All Tabs</button>
-            <button id="resetEverythingBtn" class="tabs-menu-item danger" type="button">Reset Everything</button>
-            <div class="tabs-menu-sep"></div>
-            <button id="exportBtn" class="tabs-menu-item" type="button">Export Data</button>
-            <button id="importBtn" class="tabs-menu-item" type="button">Import Data</button>
-            <div class="tabs-submenu-wrap">
-              <button id="loadDataTriggerBtn" class="tabs-menu-item tabs-submenu-trigger" type="button" aria-haspopup="true" aria-expanded="false">
-                <span>Load Data</span>
-                <span class="tabs-submenu-arrow" aria-hidden="true">▸</span>
-              </button>
-              <div id="loadDataSubmenu" class="tabs-submenu-panel" hidden>
-                <button id="loadHsk1Btn" class="tabs-menu-item" type="button">HSK Level 1</button>
-                <button id="loadHsk2Btn" class="tabs-menu-item" type="button">HSK Level 2</button>
-                <button id="loadHsk12Btn" class="tabs-menu-item" type="button">HSK Level 1-2</button>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
       <input id="importFileInput" type="file" accept="application/json,.json" hidden />
       <div id="flashCardStage" class="flashcard-stage" hidden></div>

@@ -10,6 +10,7 @@ const readingInline = document.getElementById('readingInline');
 const kanaInline = document.getElementById('kanaInline');
 const tabsMenuBtn = document.getElementById('tabsMenuBtn');
 const tabsMenuPanel = document.getElementById('tabsMenuPanel');
+const tabsMenuCloseBtn = document.getElementById('tabsMenuCloseBtn');
 const moveToTriggerBtn = document.getElementById('moveToTriggerBtn');
 const moveToSubmenu = document.getElementById('moveToSubmenu');
 const moveToList = document.getElementById('moveToList');
@@ -21,8 +22,10 @@ const loadDataSubmenu = document.getElementById('loadDataSubmenu');
 const loadHsk1Btn = document.getElementById('loadHsk1Btn');
 const loadHsk2Btn = document.getElementById('loadHsk2Btn');
 const loadHsk12Btn = document.getElementById('loadHsk12Btn');
+const loadHsk1SentencesBtn = document.getElementById('loadHsk1SentencesBtn');
 const playAllProgress = document.getElementById('playAllProgress');
 const controllerToggleBtn = document.getElementById('controllerToggleBtn');
+const controllerCloseBtn = document.getElementById('controllerCloseBtn');
 const playAllProgressText = document.getElementById('playAllProgressText');
 const playAllProgressFill = document.getElementById('playAllProgressFill');
 const playAllWidgetBtn = document.getElementById('playAllWidgetBtn');
@@ -85,9 +88,10 @@ let playAllProgressTotal = 0;
 let isFlashCardMode = false;
 let flashCardCurrentId = null;
 let flashCardHideAnswer = false;
-let isControllerCollapsed = false;
+let isControllerCollapsed = true;
 let importChoiceResolver = null;
 let playAllMainMode = 'beginning';
+let openTabActionMenuTabId = null;
 
 function shouldAutoFocusInput() {
   return !window.matchMedia('(max-width: 940px)').matches;
@@ -106,7 +110,7 @@ function updateScrollTopFabVisibility() {
 function updateControllerCollapseUi() {
   if (!playAllProgress || !controllerToggleBtn) return;
   playAllProgress.hidden = isControllerCollapsed;
-  controllerToggleBtn.textContent = isControllerCollapsed ? '▾' : '▴';
+  controllerToggleBtn.textContent = isControllerCollapsed ? 'Show Controller' : 'Hide Controller';
   controllerToggleBtn.setAttribute('aria-expanded', String(!isControllerCollapsed));
   controllerToggleBtn.setAttribute('aria-label', isControllerCollapsed ? 'Expand controller' : 'Collapse controller');
   if (isControllerCollapsed) {
@@ -223,21 +227,23 @@ function moveFlashCard(step) {
 }
 
 function updateFlashCardNavButtons() {
-  if (!flashCardPrevBtn || !flashCardNextBtn) return;
+  const prevBtn = document.getElementById('flashCardPrevInlineBtn') || flashCardPrevBtn;
+  const nextBtn = document.getElementById('flashCardNextInlineBtn') || flashCardNextBtn;
+  if (!prevBtn || !nextBtn) return;
   const activeTab = getActiveTab();
   const items = activeTab ? getTabItems(activeTab) : [];
   const enabled = isFlashCardMode && !isPlayAllActive && items.length > 0;
   if (!enabled) {
-    flashCardPrevBtn.disabled = true;
-    flashCardNextBtn.disabled = true;
+    prevBtn.disabled = true;
+    nextBtn.disabled = true;
     return;
   }
   const currentId = flashCardCurrentId && items.some(item => item.id === flashCardCurrentId)
     ? flashCardCurrentId
     : items[0].id;
   const currentIndex = items.findIndex(item => item.id === currentId);
-  flashCardPrevBtn.disabled = currentIndex <= 0;
-  flashCardNextBtn.disabled = currentIndex >= items.length - 1;
+  prevBtn.disabled = currentIndex <= 0;
+  nextBtn.disabled = currentIndex >= items.length - 1;
 }
 
 function closeMoveToSubmenu() {
@@ -276,6 +282,29 @@ function openLoadDataSubmenu() {
   loadDataTriggerBtn.setAttribute('aria-expanded', 'true');
 }
 
+function closeAllTabActionMenus() {
+  openTabActionMenuTabId = null;
+  const menus = tabsList.querySelectorAll('.tab-seg-menu');
+  menus.forEach((menu) => {
+    if (menu instanceof HTMLElement) menu.hidden = true;
+  });
+  const buttons = tabsList.querySelectorAll('.tab-seg-btn[aria-expanded="true"]');
+  buttons.forEach((btn) => btn.setAttribute('aria-expanded', 'false'));
+}
+
+function toggleTabActionMenu(tabId, menuEl, btnEl, onOpen) {
+  if (!(menuEl instanceof HTMLElement) || !(btnEl instanceof HTMLElement)) return;
+  const isOpen = !menuEl.hidden && openTabActionMenuTabId === tabId;
+  closeAllTabActionMenus();
+  if (isOpen) return;
+  if (typeof onOpen === 'function') {
+    onOpen();
+  }
+  openTabActionMenuTabId = tabId;
+  menuEl.hidden = false;
+  btnEl.setAttribute('aria-expanded', 'true');
+}
+
 function wireSubmenuHover(triggerBtn, onEnter, onLeave) {
   if (!triggerBtn) return;
   const wrap = triggerBtn.closest('.tabs-submenu-wrap');
@@ -287,6 +316,27 @@ function wireSubmenuHover(triggerBtn, onEnter, onLeave) {
   wrap.addEventListener('mouseleave', () => {
     onLeave();
   });
+}
+
+function closeTabsMenuPanel() {
+  if (!tabsMenuPanel || !tabsMenuBtn) return;
+  tabsMenuPanel.hidden = true;
+  closeMoveToSubmenu();
+  closeCopyToSubmenu();
+  closeLoadDataSubmenu();
+  tabsMenuBtn.setAttribute('aria-expanded', 'false');
+}
+
+function openTabsMenuPanel() {
+  if (!tabsMenuPanel || !tabsMenuBtn) return;
+  renderMoveToMenuItems();
+  renderCopyToMenuItems();
+  updateTabsMenuState();
+  closeMoveToSubmenu();
+  closeCopyToSubmenu();
+  closeLoadDataSubmenu();
+  tabsMenuPanel.hidden = false;
+  tabsMenuBtn.setAttribute('aria-expanded', 'true');
 }
 
 ensureWanakanaLoaded();
@@ -363,19 +413,31 @@ tabsMenuBtn.addEventListener('click', (event) => {
   event.stopPropagation();
   const willOpen = tabsMenuPanel.hidden;
   if (willOpen) {
-    renderMoveToMenuItems();
-    renderCopyToMenuItems();
-    updateTabsMenuState();
-    closeMoveToSubmenu();
-    closeCopyToSubmenu();
-    closeLoadDataSubmenu();
+    openTabsMenuPanel();
   } else {
-    closeMoveToSubmenu();
-    closeCopyToSubmenu();
-    closeLoadDataSubmenu();
+    closeTabsMenuPanel();
   }
-  tabsMenuPanel.hidden = !willOpen;
-  tabsMenuBtn.setAttribute('aria-expanded', String(willOpen));
+});
+
+if (tabsMenuCloseBtn) {
+  tabsMenuCloseBtn.addEventListener('click', () => {
+    closeTabsMenuPanel();
+  });
+}
+
+if (tabsMenuPanel) {
+  tabsMenuPanel.addEventListener('click', (event) => {
+    if (event.target === tabsMenuPanel) {
+      closeTabsMenuPanel();
+    }
+  });
+}
+
+document.addEventListener('click', (event) => {
+  const target = event.target;
+  if (!(target instanceof Node)) return;
+  if (target instanceof HTMLElement && target.closest('.tab-seg-wrap')) return;
+  closeAllTabActionMenus();
 });
 
 if (moveToTriggerBtn && moveToSubmenu) {
@@ -463,11 +525,7 @@ if (loadDataTriggerBtn && loadDataSubmenu) {
       const target = event.target;
       if (!(target instanceof Node)) return;
       if (tabsMenuPanel.contains(target) || tabsMenuBtn.contains(target)) return;
-      tabsMenuPanel.hidden = true;
-      closeMoveToSubmenu();
-      closeCopyToSubmenu();
-      closeLoadDataSubmenu();
-      tabsMenuBtn.setAttribute('aria-expanded', 'false');
+      closeTabsMenuPanel();
     });
 
     document.addEventListener('click', (event) => {
@@ -484,11 +542,7 @@ if (loadDataTriggerBtn && loadDataSubmenu) {
         closeImportChoiceDialog('cancel');
         return;
       }
-      tabsMenuPanel.hidden = true;
-      closeMoveToSubmenu();
-      closeCopyToSubmenu();
-      closeLoadDataSubmenu();
-      tabsMenuBtn.setAttribute('aria-expanded', 'false');
+      closeTabsMenuPanel();
       closePlayAllModeMenu();
     });
 
@@ -532,10 +586,13 @@ if (loadDataTriggerBtn && loadDataSubmenu) {
       focusInputIfDesktop();
     });
 
-batchDeleteBtn.addEventListener('click', () => {
+function deleteSelectedItemsInActiveTab() {
   if (selectedSavedIds.size === 0) return;
   const activeTab = getActiveTab();
   if (!activeTab) return;
+  const count = selectedSavedIds.size;
+  const ok = window.confirm(`Delete ${count} selected item(s)?`);
+  if (!ok) return;
   const activeItems = getTabItems(activeTab);
   setTabItems(activeTab, activeItems.filter(item => !selectedSavedIds.has(item.id)));
   selectedSavedIds.clear();
@@ -548,14 +605,22 @@ batchDeleteBtn.addEventListener('click', () => {
   persistAppState();
   renderTabs();
   renderSavedItems();
-});
+}
 
-clearBtn.addEventListener('click', () => {
-  const activeTab = getActiveTab();
-  if (!activeTab) return;
-  setTabItems(activeTab, []);
-  selectedSavedIds.clear();
-  lastSelectedSavedId = null;
+function clearAllItemsInTab(tabId) {
+  const modeState = getModeState();
+  if (!modeState) return;
+  const targetTab = modeState.tabs.find(tab => tab.id === tabId);
+  if (!targetTab) return;
+  const itemCount = getTabItems(targetTab).length;
+  if (itemCount === 0) return;
+  const ok = window.confirm(`Clear all ${itemCount} item(s) in "${targetTab.name}"?`);
+  if (!ok) return;
+  setTabItems(targetTab, []);
+  if (modeState.activeTabId === tabId) {
+    selectedSavedIds.clear();
+    lastSelectedSavedId = null;
+  }
   tabsMenuPanel.hidden = true;
   closeMoveToSubmenu();
   closeCopyToSubmenu();
@@ -564,20 +629,36 @@ clearBtn.addEventListener('click', () => {
   persistAppState();
   renderTabs();
   renderSavedItems();
-});
+}
 
-deleteTabBtn.addEventListener('click', () => {
+if (batchDeleteBtn) {
+  batchDeleteBtn.addEventListener('click', () => {
+    deleteSelectedItemsInActiveTab();
+  });
+}
+
+if (clearBtn) {
+  clearBtn.addEventListener('click', () => {
   const activeTab = getActiveTab();
   if (!activeTab) return;
-  const modeState = getModeState();
-  if (!modeState || modeState.tabs.length <= 1) return;
-  tabsMenuPanel.hidden = true;
-  closeMoveToSubmenu();
-  closeCopyToSubmenu();
-  closeLoadDataSubmenu();
-  tabsMenuBtn.setAttribute('aria-expanded', 'false');
-  deleteTab(activeTab.id);
-});
+    clearAllItemsInTab(activeTab.id);
+  });
+}
+
+if (deleteTabBtn) {
+  deleteTabBtn.addEventListener('click', () => {
+    const activeTab = getActiveTab();
+    if (!activeTab) return;
+    const modeState = getModeState();
+    if (!modeState || modeState.tabs.length <= 1) return;
+    tabsMenuPanel.hidden = true;
+    closeMoveToSubmenu();
+    closeCopyToSubmenu();
+    closeLoadDataSubmenu();
+    tabsMenuBtn.setAttribute('aria-expanded', 'false');
+    deleteTab(activeTab.id);
+  });
+}
 
 if (deleteAllTabsBtn) {
   deleteAllTabsBtn.addEventListener('click', () => {
@@ -692,6 +773,17 @@ if (loadHsk12Btn) {
   });
 }
 
+if (loadHsk1SentencesBtn) {
+  loadHsk1SentencesBtn.addEventListener('click', () => {
+    tabsMenuPanel.hidden = true;
+    closeMoveToSubmenu();
+    closeCopyToSubmenu();
+    closeLoadDataSubmenu();
+    tabsMenuBtn.setAttribute('aria-expanded', 'false');
+    loadPresetDataIntoActiveTab('data/hsk1_sentences.json', 'HSK 1 Sentences');
+  });
+}
+
 if (playAllBtn) {
   playAllBtn.addEventListener('click', () => {
     tabsMenuPanel.hidden = true;
@@ -748,6 +840,14 @@ if (playRandomBtn) {
 if (controllerToggleBtn) {
   controllerToggleBtn.addEventListener('click', () => {
     isControllerCollapsed = !isControllerCollapsed;
+    updateControllerCollapseUi();
+    closeTabsMenuPanel();
+  });
+}
+
+if (controllerCloseBtn) {
+  controllerCloseBtn.addEventListener('click', () => {
+    isControllerCollapsed = true;
     updateControllerCollapseUi();
   });
 }
@@ -2097,10 +2197,49 @@ if (scrollTopFab) {
       renderSavedItems();
     }
 
+    function cloneTabWithFreshIds(tab, nextName) {
+      const copy = {
+        id: generateItemId(),
+        name: nextName,
+        itemsByMode: { zh: [], ja: [], ko: [], ja_ko: [] }
+      };
+      for (const modeKey of MODE_KEYS) {
+        const items = getTabItems(tab, modeKey);
+        copy.itemsByMode[modeKey] = items.map(item => ({
+          ...item,
+          id: generateItemId(),
+          createdAt: item.createdAt || new Date().toISOString()
+        }));
+      }
+      return copy;
+    }
+
+    function duplicateTab(tabId) {
+      const modeState = getModeState();
+      if (!modeState) return;
+      const sourceIndex = modeState.tabs.findIndex(tab => tab.id === tabId);
+      if (sourceIndex === -1) return;
+      const sourceTab = modeState.tabs[sourceIndex];
+      const nextName = makeUniqueTabName(`${sourceTab.name} Copy`);
+      const duplicated = cloneTabWithFreshIds(sourceTab, nextName);
+      modeState.tabs.splice(sourceIndex + 1, 0, duplicated);
+      modeState.activeTabId = duplicated.id;
+      selectedSavedIds.clear();
+      lastSelectedSavedId = null;
+      editingTabId = null;
+      persistAppState();
+      renderTabs();
+      renderSavedItems();
+      showError(`Duplicated tab "${sourceTab.name}".`);
+    }
+
     function renderTabs() {
       const modeState = getModeState();
       tabsList.innerHTML = '';
       if (!modeState) return;
+      const activeTab = getActiveTab();
+      const activeItems = activeTab ? getTabItems(activeTab) : [];
+      const selectedCount = activeItems.filter(item => selectedSavedIds.has(item.id)).length;
       for (const tab of modeState.tabs) {
         const item = document.createElement('div');
         item.className = `tab-item${tab.id === modeState.activeTabId ? ' active' : ''}`;
@@ -2177,15 +2316,37 @@ if (scrollTopFab) {
             editInput.select();
           }, 0);
     } else {
-      const tabBtn = document.createElement('button');
-      tabBtn.className = 'tab-btn';
-      tabBtn.textContent = `${tab.name} (${getTabItems(tab).length})`;
-      tabBtn.addEventListener('click', () => switchTab(tab.id));
-      tabBtn.addEventListener('dblclick', () => startTabRename(tab.id));
-      item.appendChild(tabBtn);
-    }
-    tabsList.appendChild(item);
-  }
+          const tabBtn = document.createElement('button');
+          tabBtn.className = 'tab-btn';
+          tabBtn.textContent = `${tab.name} (${getTabItems(tab).length})`;
+          tabBtn.addEventListener('click', () => switchTab(tab.id));
+          tabBtn.addEventListener('dblclick', () => startTabRename(tab.id));
+          item.appendChild(tabBtn);
+
+          const segWrap = document.createElement('div');
+          segWrap.className = 'tab-seg-wrap';
+          const segBtn = document.createElement('button');
+          segBtn.className = 'tab-seg-btn';
+          segBtn.type = 'button';
+          segBtn.textContent = '▾';
+          segBtn.setAttribute('aria-label', `Tab actions for ${tab.name}`);
+          segBtn.setAttribute('aria-expanded', 'false');
+          const segMenu = document.createElement('div');
+          segMenu.className = 'tab-seg-menu';
+          segMenu.hidden = true;
+
+          segBtn.addEventListener('click', (event) => {
+            event.stopPropagation();
+            toggleTabActionMenu(tab.id, segMenu, segBtn, () => {
+              renderTabActionMenu(tab, segMenu);
+            });
+          });
+          segWrap.appendChild(segBtn);
+          segWrap.appendChild(segMenu);
+          item.appendChild(segWrap);
+        }
+        tabsList.appendChild(item);
+      }
 
       const addBtn = document.createElement('button');
       addBtn.className = 'tab-add-btn';
@@ -2290,6 +2451,161 @@ if (scrollTopFab) {
         }
       }
       return { movable, blocked };
+    }
+
+    function closeTabTransferSubmenus(menuEl) {
+      if (!(menuEl instanceof HTMLElement)) return;
+      const panels = menuEl.querySelectorAll('.tab-seg-submenu-panel');
+      panels.forEach((panel) => {
+        if (panel instanceof HTMLElement) panel.hidden = true;
+      });
+      const triggers = menuEl.querySelectorAll('.tab-seg-submenu-trigger[aria-expanded="true"]');
+      triggers.forEach((trigger) => {
+        if (trigger instanceof HTMLElement) trigger.setAttribute('aria-expanded', 'false');
+      });
+    }
+
+    function buildTabTransferSubmenu(menuEl, labelText, actionType) {
+      const modeState = getModeState();
+      const activeTab = getActiveTab();
+      const wrap = document.createElement('div');
+      wrap.className = 'tabs-submenu-wrap';
+
+      const trigger = document.createElement('button');
+      trigger.className = 'tabs-menu-item tabs-submenu-trigger tab-seg-submenu-trigger';
+      trigger.type = 'button';
+      trigger.setAttribute('aria-haspopup', 'true');
+      trigger.setAttribute('aria-expanded', 'false');
+      const label = document.createElement('span');
+      label.textContent = labelText;
+      const arrow = document.createElement('span');
+      arrow.className = 'tabs-submenu-arrow';
+      arrow.setAttribute('aria-hidden', 'true');
+      arrow.textContent = '▸';
+      trigger.appendChild(label);
+      trigger.appendChild(arrow);
+
+      const panel = document.createElement('div');
+      panel.className = 'tabs-submenu-panel tab-seg-submenu-panel';
+      panel.hidden = true;
+
+      if (!modeState || !activeTab) {
+        const empty = document.createElement('div');
+        empty.className = 'tabs-menu-muted';
+        empty.textContent = 'No tabs available';
+        panel.appendChild(empty);
+        wrap.appendChild(trigger);
+        wrap.appendChild(panel);
+        return wrap;
+      }
+
+      const activeItems = getTabItems(activeTab);
+      const selectedCount = activeItems.filter(item => selectedSavedIds.has(item.id)).length;
+      const targets = modeState.tabs.filter(tab => tab.id !== activeTab.id);
+      if (targets.length === 0) {
+        const empty = document.createElement('div');
+        empty.className = 'tabs-menu-muted';
+        empty.textContent = 'No other tabs';
+        panel.appendChild(empty);
+        wrap.appendChild(trigger);
+        wrap.appendChild(panel);
+        return wrap;
+      }
+
+      if (selectedCount === 0) {
+        const hint = document.createElement('div');
+        hint.className = 'tabs-menu-muted';
+        hint.textContent = 'Select item(s) first';
+        panel.appendChild(hint);
+      }
+
+      for (const target of targets) {
+        const btn = document.createElement('button');
+        btn.className = 'tabs-menu-item';
+        btn.type = 'button';
+        btn.textContent = `${target.name} (${getTabItems(target).length})`;
+        btn.disabled = selectedCount === 0;
+        btn.addEventListener('click', () => {
+          if (actionType === 'move') {
+            moveSelectedItemsToTab(target.id);
+          } else {
+            copySelectedItemsToTab(target.id);
+          }
+          closeAllTabActionMenus();
+        });
+        panel.appendChild(btn);
+      }
+
+      trigger.addEventListener('click', (event) => {
+        event.stopPropagation();
+        const willOpen = panel.hidden;
+        closeTabTransferSubmenus(menuEl);
+        if (!willOpen) return;
+        panel.hidden = false;
+        trigger.setAttribute('aria-expanded', 'true');
+      });
+
+      wrap.appendChild(trigger);
+      wrap.appendChild(panel);
+      return wrap;
+    }
+
+    function renderTabActionMenu(tab, menuEl) {
+      if (!(menuEl instanceof HTMLElement)) return;
+      const modeState = getModeState();
+      menuEl.innerHTML = '';
+      menuEl.appendChild(buildTabTransferSubmenu(menuEl, 'Move To', 'move'));
+      menuEl.appendChild(buildTabTransferSubmenu(menuEl, 'Copy To', 'copy'));
+
+      const transferSep = document.createElement('div');
+      transferSep.className = 'tabs-menu-sep';
+      menuEl.appendChild(transferSep);
+
+      const delSelectedBtn = document.createElement('button');
+      delSelectedBtn.className = 'tabs-menu-item danger';
+      delSelectedBtn.type = 'button';
+      delSelectedBtn.textContent = 'Delete Item(s)';
+      delSelectedBtn.addEventListener('click', () => {
+        if (selectedSavedIds.size === 0) {
+          showError('Select items first.');
+          return;
+        }
+        deleteSelectedItemsInActiveTab();
+        closeAllTabActionMenus();
+      });
+
+      const clearBtn = document.createElement('button');
+      clearBtn.className = 'tabs-menu-item danger';
+      clearBtn.type = 'button';
+      clearBtn.textContent = 'Clear All Items';
+      clearBtn.addEventListener('click', () => {
+        clearAllItemsInTab(tab.id);
+        closeAllTabActionMenus();
+      });
+
+      const dupBtn = document.createElement('button');
+      dupBtn.className = 'tabs-menu-item';
+      dupBtn.type = 'button';
+      dupBtn.textContent = 'Duplicate Tab';
+      dupBtn.addEventListener('click', () => {
+        closeAllTabActionMenus();
+        duplicateTab(tab.id);
+      });
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'tabs-menu-item danger';
+      delBtn.type = 'button';
+      delBtn.textContent = 'Delete This Tab';
+      delBtn.disabled = !modeState || modeState.tabs.length <= 1;
+      delBtn.addEventListener('click', () => {
+        closeAllTabActionMenus();
+        deleteTab(tab.id);
+      });
+
+      menuEl.appendChild(delSelectedBtn);
+      menuEl.appendChild(clearBtn);
+      menuEl.appendChild(dupBtn);
+      menuEl.appendChild(delBtn);
     }
 
     function moveDraggedItemToTab(targetTabId) {
@@ -2422,6 +2738,7 @@ if (scrollTopFab) {
     }
 
 function renderMoveToMenuItems() {
+  if (!moveToList) return;
   const modeState = getModeState();
   moveToList.innerHTML = '';
   const activeTab = getActiveTab();
@@ -2989,7 +3306,9 @@ function updateBatchDeleteState() {
   const hasActiveSelection = activeTab
     ? activeItems.some(item => selectedSavedIds.has(item.id))
     : false;
-  batchDeleteBtn.disabled = !hasActiveSelection;
+  if (batchDeleteBtn) {
+    batchDeleteBtn.disabled = !hasActiveSelection;
+  }
   updateMoveToTriggerState();
   updateCopyToTriggerState();
   if (!tabsMenuPanel.hidden) {
@@ -3160,7 +3479,39 @@ function renderFlashCard(items) {
   card.appendChild(target);
   card.appendChild(reading);
   card.appendChild(source);
+
+  const nav = document.createElement('div');
+  nav.className = 'flashcard-nav';
+  const prevBtn = document.createElement('button');
+  prevBtn.id = 'flashCardPrevInlineBtn';
+  prevBtn.className = 'secondary flashcard-nav-btn';
+  prevBtn.type = 'button';
+  prevBtn.setAttribute('aria-label', 'Previous card');
+  prevBtn.textContent = '←';
+  prevBtn.addEventListener('click', () => moveFlashCard(-1));
+
+  const playBtn = document.createElement('button');
+  playBtn.className = 'secondary flashcard-nav-btn flashcard-play-btn';
+  playBtn.type = 'button';
+  playBtn.setAttribute('aria-label', 'Play pronunciation');
+  playBtn.title = 'Play pronunciation';
+  playBtn.textContent = '▶';
+  playBtn.addEventListener('click', () => playSavedItem(activeItem));
+
+  const nextBtn = document.createElement('button');
+  nextBtn.id = 'flashCardNextInlineBtn';
+  nextBtn.className = 'secondary flashcard-nav-btn';
+  nextBtn.type = 'button';
+  nextBtn.setAttribute('aria-label', 'Next card');
+  nextBtn.textContent = '→';
+  nextBtn.addEventListener('click', () => moveFlashCard(1));
+
+  nav.appendChild(prevBtn);
+  nav.appendChild(playBtn);
+  nav.appendChild(nextBtn);
+  card.appendChild(nav);
   flashCardStage.appendChild(card);
+  updateFlashCardNavButtons();
 }
 
 function renderSavedItems() {
@@ -3291,6 +3642,8 @@ function renderSavedItems() {
         deleteBtn.addEventListener('click', () => {
           const activeTab = getActiveTab();
           if (!activeTab) return;
+          const ok = window.confirm('Delete this item?');
+          if (!ok) return;
           const activeItems = getTabItems(activeTab);
           setTabItems(activeTab, activeItems.filter(row => row.id !== item.id));
           selectedSavedIds.delete(item.id);

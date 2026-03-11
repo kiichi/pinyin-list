@@ -1,0 +1,113 @@
+{
+  "app": "chinese-word-helper",
+  "version": 2,
+  "exportedAt": "2026-03-09T14:25:45.867915Z",
+  "appState": {
+    "modes": {
+      "zh": {
+        "tabs": [
+          {
+            "id": "hsk1-sentences",
+            "name": "HSK-1 Sentences",
+            "itemsByMode": {
+              "zh": [
+                {
+                  "id": "s1",
+                  "mode": "zh",
+                  "source": "こんにちは、私は中国人で李明と言います。",
+                  "target": "你好！我是中国人，我叫李明。",
+                  "reading": "nǐ hǎo! wǒ shì zhōngguó rén, wǒ jiào lǐ míng",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-03-09T14:25:45.868061Z"
+                },
+                {
+                  "id": "s2",
+                  "mode": "zh",
+                  "source": "私は北京で働き、学校で中国語を勉強します。",
+                  "target": "我在北京工作，也在学校学习汉语。",
+                  "reading": "wǒ zài běijīng gōngzuò, yě zài xuéxiào xuéxí hànyǔ",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-03-09T14:25:45.868103Z"
+                },
+                {
+                  "id": "s3",
+                  "mode": "zh",
+                  "source": "今日は月曜日で今は午前9時です。",
+                  "target": "今天星期一，现在上午九点。",
+                  "reading": "jīntiān xīngqī yī, xiànzài shàngwǔ jiǔ diǎn",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-03-09T14:25:45.868136Z"
+                },
+                {
+                  "id": "s4",
+                  "mode": "zh",
+                  "source": "私は友達と教室で本を読み、字を書き、話します。",
+                  "target": "我和朋友在教室读书、写字、说话。",
+                  "reading": "wǒ hé péngyǒu zài jiàoshì dú shū, xiě zì, shuōhuà",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-03-09T14:25:45.868172Z"
+                },
+                {
+                  "id": "s5",
+                  "mode": "zh",
+                  "source": "昼にレストランでご飯、料理、果物を食べ、水とお茶を飲みます。",
+                  "target": "中午我们在饭馆吃米饭、菜、水果，也喝水和茶。",
+                  "reading": "zhōngwǔ wǒmen zài fànguǎn chī mǐfàn, cài, shuǐguǒ, yě hē shuǐ hé chá",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-03-09T14:25:45.868217Z"
+                },
+                {
+                  "id": "s6",
+                  "mode": "zh",
+                  "source": "このリンゴは5元で、私は3つ買います。",
+                  "target": "这个苹果五块钱，我买三个。",
+                  "reading": "zhè gè píngguǒ wǔ kuài qián, wǒ mǎi sān gè",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-03-09T14:25:45.868277Z"
+                },
+                {
+                  "id": "s7",
+                  "mode": "zh",
+                  "source": "午後3時、タクシーで病院へ友達に会いに行きます。",
+                  "target": "下午三点我坐出租车去医院看朋友。",
+                  "reading": "xiàwǔ sān diǎn wǒ zuò chūzūchē qù yīyuàn kàn péngyǒu",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-03-09T14:25:45.868328Z"
+                },
+                {
+                  "id": "s8",
+                  "mode": "zh",
+                  "source": "すみません、今忙しいです。夜8時に電話してもいいですか？",
+                  "target": "对不起，我现在很忙，晚上八点给你打电话，好吗？",
+                  "reading": "duìbùqǐ wǒ xiànzài hěn máng, wǎnshang bā diǎn gěi nǐ dǎ diànhuà, hǎo ma",
+                  "katakana": "",
+                  "speakLang": "zh-CN",
+                  "createdAt": "2026-03-09T14:25:45.868361Z"
+                }
+              ],
+              "ja": [],
+              "ko": [],
+              "ja_ko": []
+            }
+          }
+        ]
+      },
+      "ja": {
+        "tabs": []
+      },
+      "ko": {
+        "tabs": []
+      },
+      "ja_ko": {
+        "tabs": []
+      }
+    }
+  }
+}
