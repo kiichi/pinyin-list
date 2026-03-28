@@ -1069,12 +1069,20 @@ if (scrollTopFab) {
       }
     }
 
+    function detectSourceLang(text) {
+      if (/[\u3040-\u309F\u30A0-\u30FF]/.test(text)) return 'ja'; // hiragana/katakana
+      if (/[\uAC00-\uD7AF]/.test(text)) return 'ko';              // hangul
+      if (/[\u4E00-\u9FFF]/.test(text)) return 'zh-CN';           // CJK characters
+      if (/^[A-Za-z\s''\-.,!?]+$/.test(text.trim())) return 'en'; // ASCII words
+      return 'auto';
+    }
+
     async function translateText(text, targetLang) {
       try {
         const endpoint = 'https://translate.googleapis.com/translate_a/single';
         const params = new URLSearchParams();
         params.set('client', 'gtx');
-        params.set('sl', 'auto');
+        params.set('sl', detectSourceLang(text));
         params.set('tl', targetLang);
         params.append('dt', 't');
         if (targetLang === 'ja') {
