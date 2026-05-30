@@ -4,13 +4,13 @@
   "exportedAt": "2026-03-09T14:25:45.867915Z",
   "appState": {
     "modes": {
-      "zh": {
+      "ja_zh": {
         "tabs": [
           {
             "id": "hsk1-sentences",
             "name": "HSK-1 Sentences",
             "itemsByMode": {
-              "zh": [
+              "ja_zh": [
                 {
                   "id": "s1",
                   "mode": "zh",

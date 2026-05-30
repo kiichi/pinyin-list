@@ -51,6 +51,14 @@ h1 {
   letter-spacing: 0.02em;
 }
 
+.app-version {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  vertical-align: baseline;
+}
+
 .subtitle {
   display: none;
 }
@@ -82,31 +90,41 @@ h1 {
   font-style: italic;
 }
 
-.lookup-row {
+ .lookup-row {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1.2fr) auto;
+  /* input | chinese | pinyin/kana (expanded) | save/play (compact) */
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1.1fr) minmax(0, 1.9fr) 56px;
   border-bottom: 1px solid var(--line);
   background: #fff;
   min-width: 0;
 }
 
 .cell {
-  min-height: 96px;
-  padding: 12px 14px;
+  min-height: 64px;
+  padding: 6px 8px;
   border-right: 1px solid var(--line);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 8px;
+  gap: 6px;
 }
 
 .cell:last-child {
   border-right: none;
 }
 
-.cell-label {
+ .cell-label {
   color: var(--muted);
   font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.cell-label .label-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 }
 
 .cell-value {
@@ -115,16 +133,16 @@ h1 {
 }
 
 .cell-value.zh {
-  font-size: 1.8rem;
+  font-size: 1.35rem;
   line-height: 1.2;
 }
 
 .input-inline {
   width: 100%;
-  height: 36px;
+  height: 32px;
   border: 1px solid var(--line);
   border-radius: 4px;
-  padding: 7px 10px;
+  padding: 6px 8px;
   font-size: 0.9rem;
   background: #fff;
   color: var(--ink);
@@ -167,12 +185,16 @@ button[disabled] {
 }
 
 .play-inline {
-  width: 34px;
-  height: 34px;
-  min-width: 34px;
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
   padding: 0;
-  font-size: 0.95rem;
+  font-size: 0.82rem;
   line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
 }
 
 .save-cell {
@@ -186,20 +208,23 @@ button[disabled] {
 }
 
 .save-inline {
-  width: 100%;
-  height: 100%;
-  min-width: 0;
-  min-height: 96px;
-  padding: 0 14px;
-  font-size: 1rem;
+  width: 56px;
+  height: 40px;
+  min-width: 56px;
+  min-height: 40px;
+  padding: 0 8px;
+  font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: 0.01em;
   line-height: 1;
-  border-radius: 0;
+  border-radius: 6px;
   border: 2px solid #7b4521;
   background: linear-gradient(180deg, #f5dfc6, #eec79f);
   color: #4a2b14;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .save-inline:not([disabled]):hover {
@@ -213,9 +238,54 @@ button[disabled] {
   box-shadow: none;
 }
 
+/* Compact combined inline layout for Pinyin / Katakana */
+.combined-inline {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+.combined-inline .pinyin-inline {
+  gap: 4px;
+  width: 100%;
+  align-items: baseline;
+  justify-content: flex-start;
+}
+.combined-inline .cell-value {
+  display: inline-block;
+}
+
+.paren-kana {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-left: 2px;
+  line-height: 1;
+}
+
+.save-cell {
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+  padding: 0;
+  min-height: 44px;
+}
+
+.save-cell .save-inline {
+  width: 100%;
+  height: 100%;
+  min-height: 36px;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .saved {
   position: relative;
-  padding: 20px;
+  padding: 8px 14px 14px;
   overflow: visible;
   min-width: 0;
 }
@@ -942,7 +1012,7 @@ button[disabled] {
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 6px;
+  gap: 4px;
   min-height: 48px;
   min-width: 0;
 }
@@ -956,7 +1026,7 @@ button[disabled] {
 .saved-item {
   border: 1px solid var(--line);
   border-radius: 4px;
-  padding: 8px 10px;
+  padding: 6px 8px;
   display: grid;
   grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1.2fr) auto;
   gap: 8px;
@@ -1123,7 +1193,7 @@ button[disabled] {
     border-bottom: 1px solid var(--line);
     min-height: auto;
     display: grid;
-    grid-template-columns: 84px minmax(0, 1fr);
+    grid-template-columns: clamp(148px, 42vw, 168px) minmax(0, 1fr);
     align-items: center;
     gap: 8px;
     padding: 10px 12px;
@@ -1136,6 +1206,13 @@ button[disabled] {
   .cell-label {
     margin: 0;
     font-size: 0.78rem;
+    min-width: 0;
+    white-space: nowrap;
+  }
+
+  .cell-label .label-left {
+    min-width: 0;
+    white-space: nowrap;
   }
 
   .cell-value,
@@ -1153,7 +1230,7 @@ button[disabled] {
   }
 
   .cell-value.zh {
-    font-size: 1.05rem;
+    font-size: 0.98rem;
     line-height: 1.2;
   }
 
@@ -1162,11 +1239,20 @@ button[disabled] {
     align-items: center;
   }
 
+  .combined-inline .pinyin-inline {
+    justify-content: flex-start;
+    gap: 4px;
+  }
+
   .pinyin-inline .cell-value {
     margin-right: 0;
     flex: 1;
     min-width: 0;
     text-align: left;
+  }
+
+  .combined-inline .pinyin-inline .cell-value {
+    flex: 0 1 auto;
   }
 
   .save-cell {

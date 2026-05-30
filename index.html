@@ -18,17 +18,24 @@
 <body>
   <main class="app">
     <header>
-      <h1>Mandarin Together</h1>
-      <div id="subtitleText" class="subtitle">Input English or Japanese. Get Chinese + pinyin + katakana + audio.</div>
-      <div class="mode-row">
-        <label class="mode-label" for="modeSelect">Mode</label>
-        <select id="modeSelect" class="mode-select">
-          <option value="zh">Japanese -> Chinese</option>
-          <option value="ja">Chinese -> Japanese</option>
-          <option value="ko">Japanese -> Korean</option>
-          <option value="ja_ko">Korean -> Japanese</option>
+      <h1>Mandarin Together <span class="app-version">v2.0.0</span></h1>
+      <div id="subtitleText" class="subtitle">Input Japanese or English. Get Chinese + pinyin + katakana + audio.</div>
+      <div class="mode-row split-mode-row">
+        <label class="mode-label" for="sourceSelect">Source</label>
+        <select id="sourceSelect" class="mode-select mode-select-left">
+          <option value="en">English</option>
+          <option value="ja">Japanese</option>
+          <option value="zh">Chinese</option>
+          <option value="ko">Korean</option>
         </select>
-        <span class="mode-hint">also accepts English as input</span>
+        <span class="mode-arrow">→</span>
+        <label class="mode-label" for="targetSelect">Target</label>
+        <select id="targetSelect" class="mode-select mode-select-right">
+          <option value="zh">Chinese</option>
+          <option value="ja">Japanese</option>
+          <option value="ko">Korean</option>
+          <option value="en">English</option>
+        </select>
       </div>
       <div class="tabs-menu-wrap top-right-menu">
         <button id="tabsMenuBtn" class="tabs-menu-btn" aria-label="Menu" title="Menu">☰</button>
@@ -65,27 +72,28 @@
     <section class="lookup-row">
       <div class="cell">
         <div id="inputLabel" class="cell-label">Input Word</div>
-        <input id="sourceText" class="input-inline" type="text" placeholder="Type English or Japanese..." />
+        <input id="sourceText" class="input-inline" type="text" placeholder="Type the source text..." />
       </div>
       <div class="cell">
         <div id="targetLabel" class="cell-label">Chinese</div>
         <div id="zhText" class="cell-value zh">-</div>
       </div>
       <div class="cell">
-        <div id="readingLabel" class="cell-label">Pinyin</div>
-        <div id="readingInline" class="pinyin-inline">
-          <span id="pinyinText" class="cell-value">-</span>
-          <button id="speakBtn" class="secondary play-inline" aria-label="Play pronunciation" title="Play pronunciation" disabled>▶</button>
+        <div class="cell-label">
+          <div class="label-left">
+            <span id="readingLabel">Pinyin</span>
+            <span class="label-paren">(<span id="kanaLabel">Katakana</span>)</span>
+          </div>
+          <button id="speakBtnRight" class="secondary play-inline" aria-label="Play pronunciation" title="Play pronunciation" disabled>▶</button>
         </div>
-      </div>
-      <div class="cell">
-        <div id="kanaLabel" class="cell-label">Katakana</div>
-        <div id="kanaInline" class="pinyin-inline">
-          <span id="katakanaText" class="cell-value">-</span>
+        <div class="pinyin-inline combined-inline">
+          <div id="readingInline" class="pinyin-inline">
+            <span id="pinyinText" class="cell-value">-</span>
+            <span class="paren-kana">(<span id="katakanaText" class="cell-value">-</span>)</span>
+          </div>
         </div>
       </div>
       <div class="cell save-cell">
-        <div class="cell-label">Save</div>
         <button id="saveBtn" class="secondary save-inline" aria-label="Save to list" title="Save to list" disabled>+ Add</button>
       </div>
     </section>

@@ -4,16 +4,16 @@
   "exportedAt": "2026-02-25T01:25:47.705914Z",
   "appState": {
     "modes": {
-      "zh": {
+      "ja_zh": {
         "tabs": [
           {
             "id": "13039797-2906-414f-98e7-30126cb02e83",
             "name": "HSK Level 1",
             "itemsByMode": {
-              "zh": [
+              "ja_zh": [
                 {
                   "id": "93dd7fa9-ded6-4a0e-8a7a-5913c36d423a",
-                  "mode": "zh",
+                  "mode": "ja_zh",
                   "source": "～してください",
                   "target": "请",
                   "reading": "qǐng",
